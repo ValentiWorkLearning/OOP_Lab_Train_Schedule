@@ -19,13 +19,13 @@ public:
 	
 	Route & operator = (const Route &) = delete;
 
-	void addScheduleItem(std::unique_ptr<TrainScheduleItem>  _pScheduleItem );
+	void addScheduleItem(TrainScheduleItem const *  _pScheduleItem);
 
 private:
 	int m_uniqueNumber;
-	std::vector < std::unique_ptr < TrainScheduleItem> > m_scheduleItems;
+	std::vector < TrainScheduleItem const *  > m_scheduleItems;
 
-	std::set < TrainScheduleItem * > m_searchItems;
+	std::set < TrainScheduleItem const * > m_searchItems;
 };
 
 #endif

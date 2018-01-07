@@ -10,6 +10,7 @@ class Station;
 class Train; 
 class TrainScheduleItem;
 class Route;
+class Date;
 
 class Controller
 {
@@ -24,7 +25,9 @@ public:
 
 	void addRoute(int _uniqueNumber);
 
-	void addScheduleItemToRoute(int _routeNumber, std::unique_ptr<TrainScheduleItem>  _pScheduleItem);
+	void addScheduleItem(std::string const & _stationName, Date _arrivalTime, Date _departureTime );
+
+	void addScheduleItemToRoute(int _routeNumber,  TrainScheduleItem  const *  _pScheduleItem);
 
 	void addRouteToTrain(int _routeNumber, int _trainNumber );
 private:

@@ -27,10 +27,10 @@
     <ClInclude Include="TrainScheduleItem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="date.hpp">
+    <ClInclude Include="controller.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="controller.hpp">
+    <ClInclude Include="date.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -40,9 +40,6 @@
     </ClCompile>
     <ClCompile Include="Station.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="date.cpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="TrainScheduleItem.cpp">
       <Filter>Source Files</Filter>

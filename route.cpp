@@ -8,7 +8,7 @@ Route::Route(int _uniqueNumber) : m_uniqueNumber(_uniqueNumber)
 	}
 }
 
-void Route::addScheduleItem(std::unique_ptr<TrainScheduleItem>  _pScheduleItem)
+void Route::addScheduleItem(TrainScheduleItem const *  _pScheduleItem)
 {
-	m_scheduleItems.push_back(std::move(_pScheduleItem));
+	m_scheduleItems.push_back(_pScheduleItem);
 }
