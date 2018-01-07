@@ -30,6 +30,11 @@ void Controller::addRoute(int _uniqueNumber)
 	}
 }
 
+void Controller::addScheduleItemToRoute(int _routeNumber, std::string const & _stationName, Date  _arriveTime, Date _departureTime)
+{
+	findRoute(_routeNumber)->addScheduleItem( std::make_unique<TrainScheduleItem>( findStation(_stationName), _arriveTime, _departureTime) );
+}
+
 void Controller::addRouteToTrain(int _routeNumber, int _trainNumber)
 {
 	findTrain( _trainNumber )->setRoute( findRoute(_routeNumber) );
@@ -54,4 +59,14 @@ Route * Controller::findRoute(int _uniqueNumber)
 		throw std::logic_error(Messages::RouteDoesNotExist);
 	}
 	return it->second.get();
+}
+
+Station & Controller::findStation(std::string const & _stationName)
+{
+	auto it = m_stations.find(_stationName);
+	if (it == m_stations.end())
+	{
+		throw std::logic_error(Messages::StationDoesNotExist);
+	}
+	return *it->second;
 }

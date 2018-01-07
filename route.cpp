@@ -8,13 +8,23 @@ Route::Route(int _uniqueNumber) : m_uniqueNumber(_uniqueNumber)
 	}
 }
 
-<<<<<<< HEAD
-void Route::addScheduleItem(TrainScheduleItem const *  _pScheduleItem)
+void Route::addScheduleItem(std::unique_ptr<TrainScheduleItem>_pScheduleItem)
 {
-	m_scheduleItems.push_back(_pScheduleItem);
-=======
-void Route::addScheduleItem(std::unique_ptr<TrainScheduleItem>  _pScheduleItem)
-{
-	m_scheduleItems.push_back(std::move(_pScheduleItem));
->>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
+	if (m_stationNames.find(_pScheduleItem->getStationName()) == m_stationNames.end())
+	{
+		if (m_scheduleItems.empty() || (m_scheduleItems.back()->getDepartureTime() <= _pScheduleItem->getArrivalTime()))
+		{
+			m_stationNames.insert(_pScheduleItem->getStationName());
+			m_scheduleItems.push_back(std::move(_pScheduleItem));
+		}
+		else 
+		{
+			throw std::logic_error(Messages::IncorrectGetArrivalTimeValue);
+		}
+	}
+	else 
+	{
+		throw std::logic_error(Messages::StationAlreadyExistInSchedule);
+	}
 }
+

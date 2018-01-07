@@ -6,6 +6,7 @@
 #include "TrainScheduleItem.hpp"
 #include <memory>
 #include <set>
+#include <string>
 
 class Route
 {
@@ -15,27 +16,17 @@ public:
 	
 	~Route() = default;
 
-	Route(const Route&) = delete;
+	Route (const Route&) = delete;
 	
 	Route & operator = (const Route &) = delete;
 
-<<<<<<< HEAD
-	void addScheduleItem(TrainScheduleItem const *  _pScheduleItem);
+	void addScheduleItem(std::unique_ptr<TrainScheduleItem>   _pScheduleItem);
 
 private:
 	int m_uniqueNumber;
-	std::vector < TrainScheduleItem const *  > m_scheduleItems;
+	std::vector < std::unique_ptr<TrainScheduleItem> > m_scheduleItems;
 
-	std::set < TrainScheduleItem const * > m_searchItems;
-=======
-	void addScheduleItem(std::unique_ptr<TrainScheduleItem>  _pScheduleItem );
-
-private:
-	int m_uniqueNumber;
-	std::vector < std::unique_ptr < TrainScheduleItem> > m_scheduleItems;
-
-	std::set < TrainScheduleItem * > m_searchItems;
->>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
+	std::set < std::string  > m_stationNames;
 };
 
 #endif

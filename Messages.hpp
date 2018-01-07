@@ -14,7 +14,9 @@ namespace Messages
 	const char * const TrainDoesNotExist = "Train doesn`t exist";
 	const char * const RouteDoesNotExist = "Route doesn`t exist";
 	const char * const RouteAlreadySet = "Route has setted on train yet";
-
+	const char * const StationDoesNotExist = "Station doesn`t exist";
+	const char * const StationAlreadyExistInSchedule = "Station already exist in schedule. Train can`t return to the prrevious station";
+	const char * const IncorrectGetArrivalTimeValue = "Arrival time less than depature time in previos schedule item";
 }
 
 #endif

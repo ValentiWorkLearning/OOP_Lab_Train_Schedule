@@ -21,7 +21,8 @@ Date::Date()
 	m_year = currentTM->tm_year + 1900;
 	m_month = currentTM->tm_mon + 1;
 	m_day = currentTM->tm_mday;
-
+	m_mins = currentTM->tm_min;
+	m_hour = currentTM->tm_hour;
 }
 
 
@@ -39,11 +40,11 @@ Date::Date(int _year, int _month, int _day)
 /*****************************************************************************/
 
 
-Date::Date(const char * _yyyyMMDD, char _sep)
+Date::Date(const char * _yyyyMMDDHHMN, char _sep, char _timeSep)
 {
-	char sep1, sep2;
-	int nMatched = sscanf(_yyyyMMDD, "%d%c%d%c%d", &m_year, &sep1, &m_month, &sep2, &m_day);
-	if (nMatched != 5 || sep1 != _sep || sep2 != _sep)
+	char sep1, sep2, sep3, sep4;
+	int nMatched = sscanf(_yyyyMMDDHHMN, "%d%c %d%c %d%c %d%c %d", &m_year, &sep1, &m_month, &sep2, &m_day, &sep3, &m_hour, &sep4, &m_mins);
+	if (nMatched != 9 || sep1 != _sep || sep2 != _sep || sep3 != _sep || sep4 != _timeSep)
 		throw std::logic_error("Error: date format is incorrect!");
 
 	if (!isValid())
@@ -60,6 +61,11 @@ bool Date::isValid() const
 		return false;
 
 	if (m_month < 1 || m_month > 12)
+		return false;
+	if (m_hour > 23 || m_hour < 0)
+		return false;
+
+	if (m_mins < 0 || m_mins>59)
 		return false;
 
 	if (m_day < 1)
@@ -99,7 +105,7 @@ bool Date::isLeapYear() const
 
 bool Date::operator == (Date d) const
 {
-	return m_year == d.getYear() && m_month == d.getMonth() && m_day == d.getDay();
+	return m_year == d.getYear() && m_month == d.getMonth() && m_day == d.getDay() && m_mins == d.getMinutes() && m_hour == d.getHour();
 }
 
 
@@ -123,12 +129,31 @@ bool Date::operator < (Date d) const
 	else if (m_year == d.getYear())
 	{
 		if (m_month < d.getMonth())
+		{
 			return true;
+		}
 
 		else if (m_month == d.getMonth())
-			return m_day < d.getDay();
+		{
+			if (m_day < d.getDay())
+			{
+				return true;
+			}
+			else if (m_day == d.getDay())
+			{
+				if (m_hour < d.getHour())
+				{
+					return true;
+				}
+				else if (m_hour == d.getHour())
+				{
+					return m_mins < d.getMinutes();
+				}
+			}
+			return false;
+		}
+		return false;
 	}
-
 	return false;
 }
 
@@ -200,7 +225,7 @@ int Date::dayDifference(Date & _d2)
 
 	return difference / SedondsInDay;
 }
-int Date::yearDifference(Date & _d2) 
+int Date::yearDifference(Date & _d2)
 {
 	//tm_sec , tm_min, tm_hour, tn_mday, tm_mon, tm_year
 	struct tm thisTime { 0, 0, 0, getDay(), (getMonth() - 1), (getYear() - 1900) };
