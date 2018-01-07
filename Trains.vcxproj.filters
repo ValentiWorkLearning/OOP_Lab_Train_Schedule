@@ -27,10 +27,17 @@
     <ClInclude Include="TrainScheduleItem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="controller.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="date.hpp">
+=======
+    <ClInclude Include="date.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="controller.hpp">
+>>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,6 +48,12 @@
     <ClCompile Include="Station.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="date.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+>>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
     <ClCompile Include="TrainScheduleItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

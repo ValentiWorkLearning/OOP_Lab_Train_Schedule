@@ -155,6 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="date.cpp" />
+>>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
     <ClCompile Include="main.cpp" />
     <ClCompile Include="route.cpp" />
     <ClCompile Include="Station.cpp" />

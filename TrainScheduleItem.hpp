@@ -1,10 +1,17 @@
 #ifndef TRAIN_SCHEDULE_ITEM
 #define TRAIN_SCHEDULE_ITEM
 
+<<<<<<< HEAD
 #include "Messages.hpp"
 
 class Station;
 class Date;
+=======
+#include "date.hpp"
+#include "Messages.hpp"
+
+class Station;
+>>>>>>> ecf7e5c255b21fe99b66690b3c38e79daad287c1
 
 class  TrainScheduleItem
 {
