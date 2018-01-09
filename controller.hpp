@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <functional>
+#include <set>
 
 class Station;
 class Train; 
@@ -44,6 +45,8 @@ public:
 	std::vector<std::string> getMostLongRouteList(int _count);
 
 	std::vector<std::pair < std::string, std::string > > getPairedStations(int _count);
+
+	std::set <std::string > getUnusedStations(void);
 private:
 
 	Train * findTrain(int _uniqueNumber);

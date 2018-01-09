@@ -20,6 +20,12 @@ int main()
 	c.addStation("Ternopil", 4);
 	c.addStation("Volchansk", 1);
 
+	//add unused stations
+	c.addStation("Kirovka", 1);
+	c.addStation("Golovnevka", 2);
+	c.addStation("Kirilenska", 4);
+	c.addStation("Malinovka", 1);
+	//
 	c.addTrain(1, 860);
 	c.addTrain(2, 720);
 	c.addTrain(3, 450);
@@ -60,8 +66,11 @@ int main()
 	c.addScheduleItemToRoute(726, "Poltava", Date("2018/11/08/18:55"), Date("2018/11/08/19:55"));
 	c.addScheduleItemToRoute(726, "Kremenchug", Date("2018/11/08/20:00"), Date("2018/11/08/20:15"));
 	c.addScheduleItemToRoute(726, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
+	c.addScheduleItemToRoute(726, "Malinovka", Date("2018/11/08/23:23"), Date("2018/11/08/23:58"));
 	std::vector<std::string> expectedValue = c.getMostPopularStations(5);
 
 	std::vector< std::pair<std::string, std::string> > expectedValue1 = c.getPairedStations(5);
+
+	std::set<std::string> expectedResult = c.getUnusedStations();
 	return 0;
 }

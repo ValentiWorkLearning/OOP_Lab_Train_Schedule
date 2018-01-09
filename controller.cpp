@@ -134,6 +134,37 @@ std::vector< std::pair<std::string, std::string> > Controller::getPairedStations
 	return returnResult;
 }
 
+std::set<std::string> Controller::getUnusedStations(void)
+{
+	std::set<std::string> returnResult;
+	std::set<std::string> deprecatedStations;
+
+	for (auto && x : m_stations) 
+	{
+		for (auto && y : m_routes) 
+		{
+			if (!y.second->hasStation(x.second->getStationName())) 
+			{
+				returnResult.emplace(x.second->getStationName());
+			}
+			else 
+			{
+				deprecatedStations.insert(x.second->getStationName());
+			}
+		}
+	}
+	for (auto && x : deprecatedStations) 
+	{
+		if (returnResult.find(x) != returnResult.end()) 
+		{
+			returnResult.erase(x);
+		}
+	}
+	return returnResult;
+}
+
+
+
 Train * Controller::findTrain(int _uniqueNumber)
 {
 	auto it = m_trains.find(_uniqueNumber);
