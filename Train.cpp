@@ -4,7 +4,7 @@
 
 #include <string>
 
-Train::Train(int _nTrainNumber ,int _nPassagers): m_passagersPlaces(_nPassagers), m_trainNumber(_nTrainNumber)
+Train::Train(int _nTrainNumber ,int _nPassagers): m_passagersPlaces(_nPassagers), m_trainNumber(_nTrainNumber),m_route(nullptr)
 {
 	if (m_trainNumber < 0)
 		throw std::logic_error(Messages::InvalidTrainNumber);
@@ -30,7 +30,7 @@ Route const * Train::getRoute() const
 
 void Train::setRoute(Route const * _route)
 {
-	if (m_route != nullptr)
+	if (m_route == nullptr)
 	{
 		m_route = _route;
 	}

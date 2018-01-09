@@ -40,6 +40,8 @@ public:
 	bool hasStationInRoute(int _routeNumber, std::string const & _stationName);
 
 	std::vector<std::string > getMostPopularStations(int  _counter);
+
+	std::vector<std::string> getMostLongRouteList(int _count);
 private:
 
 	Train * findTrain(int _uniqueNumber);
