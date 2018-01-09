@@ -85,6 +85,55 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 	return returnResult;
 }
 
+std::vector< std::pair<std::string, std::string> > Controller::getPairedStations(int _count)
+{
+	std::vector<std::pair<std::string, std::string>> returnResult;
+	std::map< std::pair<std::string, std::string>, int> l_pairedStations;
+	
+	for (auto && x: m_stations) 
+	{
+		for (auto && y:m_stations) 
+		{
+			if (x.second->getStationName() != y.second->getStationName()&&
+				l_pairedStations.find( std::make_pair( y.second->getStationName() , x.second->getStationName() ) ) == l_pairedStations.end())
+			{
+				l_pairedStations.emplace(std::make_pair(x.second->getStationName(), y.second->getStationName()), 0);
+			}
+		}
+	}
+
+	for (auto && x: l_pairedStations ) 
+	{
+		for (auto && y : m_routes )
+		{
+			if (y.second->hasStation(x.first.first) && y.second->hasStation(x.first.second)) 
+			{
+				l_pairedStations[std::make_pair(x.first.first, x.first.second)] ++;
+			}
+		}
+	}
+	
+	std::multimap<  int, std::pair<std::string, std::string> , std::greater<> > l_countToPairedStations;
+
+	for (auto && x: l_pairedStations) 
+	{
+		if (x.second > 2)
+			l_countToPairedStations.emplace(x.second, x.first);
+	}
+
+	for (auto && x : l_countToPairedStations) 
+	{
+		static int i = 0;
+
+		if (i == _count) break;
+		
+		returnResult.push_back(x.second);
+		
+		i++;
+	}
+	return returnResult;
+}
+
 Train * Controller::findTrain(int _uniqueNumber)
 {
 	auto it = m_trains.find(_uniqueNumber);
