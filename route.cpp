@@ -28,3 +28,8 @@ void Route::addScheduleItem(std::unique_ptr<TrainScheduleItem>_pScheduleItem)
 	}
 }
 
+bool Route::hasStation(std::string const & _stationName)
+{
+	return(m_stationNames.find(_stationName) == m_stationNames.end() )? false:true ;
+}
+

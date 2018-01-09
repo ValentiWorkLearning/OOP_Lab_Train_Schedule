@@ -5,6 +5,10 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <functional>
 
 class Station;
 class Train; 
@@ -33,6 +37,9 @@ public:
 
 	void addRouteToTrain(int _routeNumber, int _trainNumber );
 
+	bool hasStationInRoute(int _routeNumber, std::string const & _stationName);
+
+	std::vector<std::string > getMostPopularStations(int  _counter);
 private:
 
 	Train * findTrain(int _uniqueNumber);
