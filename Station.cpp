@@ -9,12 +9,12 @@ Station::Station( std::string const & _stationName, int _nPerons):m_Name(_statio
 		throw std::logic_error(Messages::StationNameEmpty);
 }
 
-std::string & Station::getStationName()
+std::string const  & Station::getStationName() const 
 {
 	return m_Name;
 }
 
-int Station::getPerronsCount()
+int Station::getPerronsCount() const 
 {
 	return m_perons;
 }

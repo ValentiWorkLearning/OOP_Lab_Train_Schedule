@@ -11,17 +11,17 @@ TrainScheduleItem::TrainScheduleItem(Station & _station		,
 		throw std::logic_error(Messages::InvalidTimeSended);
 }
 
-std::string const & TrainScheduleItem::getStationName()
+std::string const & TrainScheduleItem::getStationName() const 
 {
 	return m_station.getStationName();
 }
 
-Date const & TrainScheduleItem::getArrivalTime()
+Date const & TrainScheduleItem::getArrivalTime() const 
 {
 	return m_arrivalTime;
 }
 
-Date const & TrainScheduleItem::getDepartureTime()
+Date const & TrainScheduleItem::getDepartureTime()const 
 {
 	return m_departureTime;
 }

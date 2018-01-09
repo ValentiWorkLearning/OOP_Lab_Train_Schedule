@@ -147,15 +147,16 @@
     <ClInclude Include="Messages.hpp" />
     <ClInclude Include="Route.hpp" />
     <ClInclude Include="Station.hpp" />
+    <ClInclude Include="testslib.hpp" />
     <ClInclude Include="Train.hpp" />
     <ClInclude Include="TrainScheduleItem.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="controller.cpp" />
     <ClCompile Include="date.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="route.cpp" />
     <ClCompile Include="Station.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="Train.cpp" />
     <ClCompile Include="TrainScheduleItem.cpp" />
   </ItemGroup>

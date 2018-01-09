@@ -163,6 +163,40 @@ std::set<std::string> Controller::getUnusedStations(void)
 	return returnResult;
 }
 
+std::vector<std::string> Controller::getStationsWithNotEnoughtPerons(void)
+{
+	std::vector<std::string> returnValue;
+	
+	std::multimap<std::string, std::pair<Date, Date>> l_stationToBusyPeriod;
+
+	for (auto && x : m_stations) 
+	{
+		
+		for (auto && y : m_routes) 
+		{
+			if (y.second->hasStation(x.second->getStationName())) 
+			{
+				y.second->forEachScheduleItem(
+					[&x, & l_stationToBusyPeriod ](TrainScheduleItem const & _item) 
+					{
+						if (_item.getStationName() == x.second->getStationName()) 
+						{
+							l_stationToBusyPeriod.insert({ _item.getStationName() , 
+											 std::make_pair(_item.getArrivalTime(), _item.getDepartureTime()) });
+						}
+					}
+				);
+			}
+		}
+	}
+
+	for (auto && x : l_stationToBusyPeriod) 
+	{
+		
+	}
+	return returnValue;
+}
+
 
 
 Train * Controller::findTrain(int _uniqueNumber)

@@ -7,6 +7,7 @@
 #include <memory>
 #include <set>
 #include <string>
+#include <functional>
 
 class Route
 {
@@ -23,6 +24,16 @@ public:
 	void addScheduleItem(std::unique_ptr<TrainScheduleItem>   _pScheduleItem);
 
 	bool hasStation(std::string const & _stationName);
+	
+	
+
+	void  forEachScheduleItem(std::function<void(TrainScheduleItem const &)> _action) const 
+	{
+		for (auto const & trainPtr : m_scheduleItems) 
+		{
+			_action( * trainPtr);
+		}
+	}
 
 private:
 

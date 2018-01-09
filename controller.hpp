@@ -47,6 +47,8 @@ public:
 	std::vector<std::pair < std::string, std::string > > getPairedStations(int _count);
 
 	std::set <std::string > getUnusedStations(void);
+	
+	std::vector<std::string> getStationsWithNotEnoughtPerons(void);
 private:
 
 	Train * findTrain(int _uniqueNumber);

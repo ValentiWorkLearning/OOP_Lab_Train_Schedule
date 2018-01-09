@@ -8,8 +8,9 @@ class Station
 public:
 	explicit Station (  std::string const  & _stationName, int _nPerons );
 
-	std::string & getStationName();
-	int getPerronsCount();
+	std::string const  & getStationName()const ;
+
+	int getPerronsCount() const ;
 
 	~Station() = default;
 private:

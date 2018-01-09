@@ -18,10 +18,10 @@ public:
 
 	 TrainScheduleItem & operator = (const TrainScheduleItem &) = delete;
 
-	 std::string const & getStationName();
+	 std::string const & getStationName()const;
 
-	 Date const & getArrivalTime();
-	 Date const & getDepartureTime();
+	 Date const & getArrivalTime() const ;
+	 Date const & getDepartureTime() const ;
 private:
 
 	Station &  m_station;
