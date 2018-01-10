@@ -33,3 +33,25 @@ bool Route::hasStation(std::string const & _stationName)
 	return(m_stationNames.find(_stationName) == m_stationNames.end() )? false:true ;
 }
 
+int const & Route::getRouteNumber(void)const
+{
+	return m_uniqueNumber;
+}
+
+Station const & Route::getStartStation(void)
+{
+	return m_scheduleItems.front().get()->getStation();
+}
+
+Station const & Route::getLastStation(void)
+{
+	return m_scheduleItems.back().get()->getStation();
+}
+
+time_t Route::getRouteDuration(void)
+{
+	time_t returnResult = m_scheduleItems.front()->getArrivalTime().secondsDifference(m_scheduleItems.back()->getDepartureTime());
+	return returnResult;
+}
+
+

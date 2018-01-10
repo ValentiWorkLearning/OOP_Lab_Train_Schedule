@@ -8,6 +8,7 @@
 #include <set>
 #include <string>
 #include <functional>
+#include <ctime>
 
 class Route
 {
@@ -25,8 +26,14 @@ public:
 
 	bool hasStation(std::string const & _stationName);
 	
-	
+	int const & getRouteNumber(void) const;
 
+	Station const & getStartStation(void);
+	
+	Station const & getLastStation(void);
+
+	time_t getRouteDuration(void);
+	
 	void  forEachScheduleItem(std::function<void(TrainScheduleItem const &)> _action) const 
 	{
 		for (auto const & trainPtr : m_scheduleItems) 

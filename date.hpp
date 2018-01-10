@@ -39,7 +39,10 @@ public:
 	bool operator >= (Date d) const;
 
 	void addDay(int _nDay);
-	int  dayDifference(Date & _d2);
+	
+	int  dayDifference(Date const & _d2)const ;
+
+	int secondsDifference(Date const & _d2)const;
 	/*-----------------------------------------------------------------*/
 
 private:

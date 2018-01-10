@@ -209,7 +209,7 @@ void Date::addDay(int _nDay)
 
 }
 
-int Date::dayDifference(Date & _d2)
+int Date::dayDifference(const Date & _d2)const 
 {
 	//tm_sec , tm_min, tm_hour, tn_mday, tm_mon, tm_year
 	struct tm thisTime { 0, 0, 0, getDay(), (getMonth() - 1), (getYear() - 1900) };
@@ -230,6 +230,24 @@ int Date::dayDifference(Date & _d2)
 	return difference / SedondsInDay;
 }
 
+int Date::secondsDifference(const Date & _d2) const 
+{
+	struct tm thisTime { 0, getMinutes(), getHour(), getDay(), (getMonth() - 1), (getYear() - 1900) };
+
+	struct tm incomingTime { 0, _d2.getMinutes(), _d2.getHour(), _d2.getDay(), (_d2.getMonth() - 1), (_d2.getYear() - 1900) };
+
+	time_t thisTime_t;
+	time_t incomingTime_t;
+
+	double difference = 0;
+	
+	thisTime_t = mktime(&thisTime);
+	incomingTime_t = mktime(&incomingTime);
+
+	difference = difftime(incomingTime_t, thisTime_t);
+
+	return difference ;
+}
 /*****************************************************************************/
 
 

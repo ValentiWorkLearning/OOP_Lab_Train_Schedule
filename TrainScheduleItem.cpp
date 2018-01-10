@@ -16,6 +16,11 @@ std::string const & TrainScheduleItem::getStationName() const
 	return m_station.getStationName();
 }
 
+Station const & TrainScheduleItem::getStation() const
+{
+	return m_station;
+}
+
 Date const & TrainScheduleItem::getArrivalTime() const 
 {
 	return m_arrivalTime;

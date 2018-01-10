@@ -85,6 +85,32 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 	return returnResult;
 }
 
+std::vector<std::string> Controller::getMostLongRoute(int _count)
+{
+	
+	std::set<std::pair<time_t, int> ,std::greater<std::pair<time_t, int> > > l_routes;
+	
+	std::vector<std::string> l_result;
+
+	for (auto & x : m_routes) 
+	{
+		l_routes.emplace( std::make_pair(x.second->getRouteDuration(), x.second->getRouteNumber() ) );
+	}
+
+	for (auto & x : l_routes) 
+	{
+		static int i = 0;
+		
+		if (i == _count) break;
+
+		Route * tempRoute = findRoute(x.second);
+		l_result.push_back("Route number: " + std::to_string(x.second) + " start station: " + tempRoute->getStartStation().getStationName()+
+		" finish station: " + tempRoute->getLastStation().getStationName()+" duration: "+ std::to_string(x.first/3600)+ ':'+std::to_string((x.first % 3600)/60));
+		i++;
+	}
+	return l_result;
+}
+
 std::vector< std::pair<std::string, std::string> > Controller::getPairedStations(int _count)
 {
 	std::vector<std::pair<std::string, std::string>> returnResult;
@@ -195,7 +221,7 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 			for (int j = 0; j < l_stationToBusyPeriod.size(); j++) 
 			{
 				if (i == j) continue;
-
+		
 				if (l_stationToBusyPeriod[i].first <= l_stationToBusyPeriod[j].second && 
 					l_stationToBusyPeriod[i].second >= l_stationToBusyPeriod[j].first) 
 				{
@@ -203,6 +229,7 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 				}
 			}
  		}
+
 		if (l_timeOverlaps > x.second->getPerronsCount()) 
 		{
 			returnValue.insert(x.second->getStationName());

@@ -42,7 +42,7 @@ public:
 
 	std::vector<std::string > getMostPopularStations(int  _counter);
 
-	std::vector<std::string> getMostLongRouteList(int _count);
+	std::vector<std::string> getMostLongRoute(int _count);
 
 	std::vector<std::pair < std::string, std::string > > getPairedStations(int _count);
 

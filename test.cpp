@@ -128,7 +128,9 @@ DECLARE_OOP_TEST(test_common_configuration)
 
 	Controller c;
 
-	
+	createCommonConfiguration(c);
+
+	std::vector<std::string> receivedResult  = c.getMostLongRoute(4);
 }
 
 DECLARE_OOP_TEST(test_lyamda_simple) 
@@ -146,6 +148,7 @@ DECLARE_OOP_TEST(test_lyamda_simple)
 	}
 	);
 }
+
 
 DECLARE_OOP_TEST(test_stations_with_not_enough_perons)
 {
