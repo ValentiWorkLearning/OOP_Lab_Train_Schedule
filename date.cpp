@@ -149,6 +149,10 @@ bool Date::operator < (Date d) const
 				{
 					return m_mins < d.getMinutes();
 				}
+				else if (m_hour > d.getHour()) 
+				{
+					return false;
+				}
 			}
 			return false;
 		}

@@ -48,7 +48,7 @@ public:
 
 	std::set <std::string > getUnusedStations(void);
 	
-	std::vector<std::string> getStationsWithNotEnoughtPerons(void);
+	std::set<std::string> getStationsWithNotEnoughtPerons(void);
 private:
 
 	Train * findTrain(int _uniqueNumber);

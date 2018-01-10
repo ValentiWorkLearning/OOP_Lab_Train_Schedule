@@ -163,37 +163,53 @@ std::set<std::string> Controller::getUnusedStations(void)
 	return returnResult;
 }
 
-std::vector<std::string> Controller::getStationsWithNotEnoughtPerons(void)
+std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 {
-	std::vector<std::string> returnValue;
+	std::set<std::string> returnValue;
 	
-	std::multimap<std::string, std::pair<Date, Date>> l_stationToBusyPeriod;
+	std::vector<std::pair<Date, Date>> l_stationToBusyPeriod;
 
-	for (auto && x : m_stations) 
+	for (auto && x : m_stations)
 	{
-		
-		for (auto && y : m_routes) 
+
+		for (auto && y : m_routes)
 		{
-			if (y.second->hasStation(x.second->getStationName())) 
+			if (y.second->hasStation(x.second->getStationName()))
 			{
 				y.second->forEachScheduleItem(
-					[&x, & l_stationToBusyPeriod ](TrainScheduleItem const & _item) 
+					[&x, &l_stationToBusyPeriod](TrainScheduleItem const & _item)
+				{
+					if (_item.getStationName() == x.second->getStationName())
 					{
-						if (_item.getStationName() == x.second->getStationName()) 
-						{
-							l_stationToBusyPeriod.insert({ _item.getStationName() , 
-											 std::make_pair(_item.getArrivalTime(), _item.getDepartureTime()) });
-						}
+						l_stationToBusyPeriod.push_back(std::make_pair(_item.getArrivalTime(), _item.getDepartureTime()));
 					}
+				}
 				);
 			}
 		}
+
+		int l_timeOverlaps = 0;
+		
+		for (int i = 0; i < l_stationToBusyPeriod.size(); i++) 
+		{
+			for (int j = 0; j < l_stationToBusyPeriod.size(); j++) 
+			{
+				if (i == j) continue;
+
+				if (l_stationToBusyPeriod[i].first <= l_stationToBusyPeriod[j].second && 
+					l_stationToBusyPeriod[i].second >= l_stationToBusyPeriod[j].first) 
+				{
+					l_timeOverlaps++;
+				}
+			}
+ 		}
+		if (l_timeOverlaps > x.second->getPerronsCount()) 
+		{
+			returnValue.insert(x.second->getStationName());
+		}
+		l_stationToBusyPeriod.clear();
 	}
 
-	for (auto && x : l_stationToBusyPeriod) 
-	{
-		
-	}
 	return returnValue;
 }
 

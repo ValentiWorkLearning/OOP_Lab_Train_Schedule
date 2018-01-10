@@ -81,6 +81,45 @@ void createCommonConfiguration(Controller & _c)
 	std::set<std::string> expectedResult = _c.getUnusedStations();
 }
 
+
+void createOverlapConfiguration(Controller &_c) 
+{
+	_c.addStation("Novgorodska", 1);
+	_c.addStation("Poltava", 2);
+	_c.addStation("Lviv", 1);
+	_c.addStation("Kiev", 1);
+	_c.addStation("Kharkiv", 1);
+	
+	_c.addRoute(127);
+	_c.addRoute(128);
+	_c.addRoute(129);
+	_c.addRoute(726);
+
+	_c.addTrain(1, 860);
+	_c.addTrain(2, 720);
+	_c.addTrain(3, 450);
+
+	_c.addScheduleItemToRoute(127, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
+	_c.addScheduleItemToRoute(128, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
+
+	_c.addScheduleItemToRoute(127, "Kharkiv", Date("2018/11/08/18:55"), Date("2018/11/08/18:56"));
+	_c.addScheduleItemToRoute(128, "Kharkiv", Date("2018/11/08/17:55"), Date("2018/11/08/18:00"));
+	_c.addScheduleItemToRoute(129, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
+
+	_c.addScheduleItemToRoute(127, "Kiev", Date("2018/11/08/19:55"), Date("2018/11/08/20:00"));
+	_c.addScheduleItemToRoute(128, "Kiev", Date("2018/11/08/21:55"), Date("2018/11/08/22:30"));
+	_c.addScheduleItemToRoute(129, "Kiev", Date("2018/11/08/23:55"), Date("2018/11/09/12:30"));
+
+	_c.addScheduleItemToRoute(127, "Poltava", Date("2018/11/08/21:55"), Date("2018/11/08/22:00"));
+
+	_c.addScheduleItemToRoute(127, "Lviv", Date("2018/11/08/22:35"), Date("2018/11/08/22:40"));
+	_c.addScheduleItemToRoute(128, "Lviv", Date("2018/11/08/22:37"), Date("2018/11/08/22:38"));
+	
+	
+	
+
+
+}
 /*****************************************************************************/
 
 
@@ -108,12 +147,16 @@ DECLARE_OOP_TEST(test_lyamda_simple)
 	);
 }
 
-DECLARE_OOP_TEST(test_stations_with_not_enough_perons) 
+DECLARE_OOP_TEST(test_stations_with_not_enough_perons)
 {
 	Controller c;
-	createCommonConfiguration(c);
+	createOverlapConfiguration(c);
 
-	std::vector<std::string> expectedResult = c.getStationsWithNotEnoughtPerons();
+	std::set<std::string> expectedResult{ "Novgorodska" , "Lviv" };
+
+	std::set<std::string> receivedResult = c.getStationsWithNotEnoughtPerons();
+
+	assert(expectedResult == receivedResult);
 }
 /*****************************************************************************/
 
