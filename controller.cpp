@@ -81,35 +81,34 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 
 	std::map<std::string, int> stationCounter;
 	
-	for (auto it = m_stations.begin(); it != m_stations.end(); it++) 
+	for (auto & x : m_stations) 
 	{
-		stationCounter.insert({ it->second->getStationName(), 0 });
+		stationCounter.insert({ x.second->getStationName(), 0 });
 	}
 
-	for (auto it = m_routes.begin(); it != m_routes.end(); it++) 
+	for (auto & x : m_routes) 
 	{
-		for (auto it1 = m_stations.begin(); it1 != m_stations.end(); it1++) 
+		for (auto & y : m_stations)
 		{
-			if (it->second->hasStation(it1->second->getStationName())) 
+			if (x.second->hasStation(y.second->getStationName())) 
 			{
-				stationCounter[it1->second->getStationName()]++;
+				stationCounter[y.second->getStationName()]++;
 			}
 		}
 	}
 
 	std::multimap<int, std::string,std::greater<int>> greaterStation; 
 	
-	for (auto it = stationCounter.begin(); it != stationCounter.end(); it++) 
+	for (auto &x : stationCounter) 
 	{
-		greaterStation.emplace( it->second, it->first );
+		greaterStation.emplace(x.second, x.first);
 	}
 
-	for (auto it = greaterStation.begin(); it != greaterStation.end(); it++) 
+	for (auto & x : greaterStation) 
 	{
 		static int i = 0;
 		if (i == _counter) break;
-
-		returnResult.push_back(it->second + ":"  + std::to_string( it->first) );
+		returnResult.push_back(x.second + ":" + std::to_string(x.first));
 		i++;
 	}
 	return returnResult;
@@ -146,9 +145,9 @@ std::vector< std::pair<std::string, std::string> > Controller::getPairedStations
 	std::vector<std::pair<std::string, std::string>> returnResult;
 	std::map< std::pair<std::string, std::string>, int> l_pairedStations;
 	
-	for (auto && x: m_stations) 
+	for (auto & x: m_stations) 
 	{
-		for (auto && y:m_stations) 
+		for (auto & y:m_stations) 
 		{
 			if (x.second->getStationName() != y.second->getStationName()&&
 				l_pairedStations.find( std::make_pair( y.second->getStationName() , x.second->getStationName() ) ) == l_pairedStations.end())
@@ -158,9 +157,9 @@ std::vector< std::pair<std::string, std::string> > Controller::getPairedStations
 		}
 	}
 
-	for (auto && x: l_pairedStations ) 
+	for (auto & x: l_pairedStations ) 
 	{
-		for (auto && y : m_routes )
+		for (auto & y : m_routes )
 		{
 			if (y.second->hasStation(x.first.first) && y.second->hasStation(x.first.second)) 
 			{
@@ -171,13 +170,13 @@ std::vector< std::pair<std::string, std::string> > Controller::getPairedStations
 	
 	std::multimap<  int, std::pair<std::string, std::string> , std::greater<> > l_countToPairedStations;
 
-	for (auto && x: l_pairedStations) 
+	for (auto & x: l_pairedStations) 
 	{
 		if (x.second > 2)
 			l_countToPairedStations.emplace(x.second, x.first);
 	}
 
-	for (auto && x : l_countToPairedStations) 
+	for (auto & x : l_countToPairedStations) 
 	{
 		static int i = 0;
 
@@ -195,9 +194,9 @@ std::set<std::string> Controller::getUnusedStations(void)
 	std::set<std::string> returnResult;
 	std::set<std::string> deprecatedStations;
 
-	for (auto && x : m_stations) 
+	for (auto & x : m_stations) 
 	{
-		for (auto && y : m_routes) 
+		for (auto & y : m_routes) 
 		{
 			if (!y.second->hasStation(x.second->getStationName())) 
 			{
@@ -209,7 +208,7 @@ std::set<std::string> Controller::getUnusedStations(void)
 			}
 		}
 	}
-	for (auto && x : deprecatedStations) 
+	for (auto & x : deprecatedStations) 
 	{
 		if (returnResult.find(x) != returnResult.end()) 
 		{
@@ -223,8 +222,6 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 {
 	std::set<std::string> returnValue;
 	
-	//std::vector<std::pair<Date, Date>> l_stationToBusyPeriod;
-
 	struct StationEvent 
 	{
 		enum class Event : bool { Arrive, Departure };
@@ -234,14 +231,14 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 		StationEvent(Date const & _date, Event _event) :m_date(_date), m_event(_event) {};
 	};
 
-	for (auto && x : m_stations)
+	for (auto & x : m_stations)
 	{
 		std::vector <StationEvent> l_stationsEvents{};
 		std::string l_currentStation{ x.second->getStationName() };
 
 		int l_platformsAvaliable{x.second->getPerronsCount()};
 	
-		for (auto && y : m_routes)
+		for (auto & y : m_routes)
 		{
 			if (y.second->hasStation(x.second->getStationName()))
 			{
