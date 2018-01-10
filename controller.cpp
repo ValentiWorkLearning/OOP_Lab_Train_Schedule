@@ -193,50 +193,57 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 {
 	std::set<std::string> returnValue;
 	
-	std::vector<std::pair<Date, Date>> l_stationToBusyPeriod;
+	//std::vector<std::pair<Date, Date>> l_stationToBusyPeriod;
+
+	struct StationEvent 
+	{
+		enum class Event : bool { Arrive, Departure };
+		Date m_date;
+		Event m_event;
+
+		StationEvent(Date const & _date, Event _event) :m_date(_date), m_event(_event) {};
+	};
 
 	for (auto && x : m_stations)
 	{
+		std::vector <StationEvent> l_stationsEvents{};
+		std::string l_currentStation{ x.second->getStationName() };
 
+		int l_platformsAvaliable{x.second->getPerronsCount()};
+	
 		for (auto && y : m_routes)
 		{
 			if (y.second->hasStation(x.second->getStationName()))
 			{
 				y.second->forEachScheduleItem(
-					[&x, &l_stationToBusyPeriod](TrainScheduleItem const & _item)
+					[&x, &l_stationsEvents](TrainScheduleItem const & _item)
 				{
 					if (_item.getStationName() == x.second->getStationName())
 					{
-						l_stationToBusyPeriod.push_back(std::make_pair(_item.getArrivalTime(), _item.getDepartureTime()));
+						l_stationsEvents.push_back(StationEvent(_item.getArrivalTime(), StationEvent::Event::Arrive));
+						l_stationsEvents.push_back(StationEvent(_item.getDepartureTime(), StationEvent::Event::Departure));
 					}
 				}
 				);
 			}
 		}
-
-		int l_timeOverlaps = 0;
-		
-		for (int i = 0; i < l_stationToBusyPeriod.size(); i++) 
+		std::sort(l_stationsEvents.begin(), l_stationsEvents.end(), [](StationEvent & _st1, StationEvent & _st2)
 		{
-			for (int j = 0; j < l_stationToBusyPeriod.size(); j++) 
+			return _st1.m_date < _st2.m_date;
+		});
+
+		for (auto x : l_stationsEvents) 
+		{
+			static int  l_platformsUsed{};
+
+			(x.m_event == StationEvent::Event::Arrive) ? ++l_platformsUsed : --l_platformsUsed;
+
+			if (l_platformsUsed > l_platformsAvaliable) 
 			{
-				if (i == j) continue;
-		
-				if (l_stationToBusyPeriod[i].first <= l_stationToBusyPeriod[j].second && 
-					l_stationToBusyPeriod[i].second >= l_stationToBusyPeriod[j].first) 
-				{
-					l_timeOverlaps++;
-				}
+				returnValue.insert(l_currentStation);
 			}
- 		}
-
-		if (l_timeOverlaps > x.second->getPerronsCount()) 
-		{
-			returnValue.insert(x.second->getStationName());
 		}
-		l_stationToBusyPeriod.clear();
 	}
-
 	return returnValue;
 }
 

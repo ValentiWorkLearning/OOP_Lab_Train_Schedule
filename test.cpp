@@ -150,7 +150,7 @@ DECLARE_OOP_TEST(test_lyamda_simple)
 }
 
 
-DECLARE_OOP_TEST(test_stations_with_not_enough_perons)
+DECLARE_OOP_TEST(test_stations_with_not_enough_perons_1)
 {
 	Controller c;
 	createOverlapConfiguration(c);
@@ -160,6 +160,27 @@ DECLARE_OOP_TEST(test_stations_with_not_enough_perons)
 	std::set<std::string> receivedResult = c.getStationsWithNotEnoughtPerons();
 
 	assert(expectedResult == receivedResult);
+}
+
+DECLARE_OOP_TEST(test_stations_with_not_enough_perons_2) 
+{
+	Controller c;
+
+	c.addStation("Novgorodska", 10);
+
+	for (int i = 0; i < 10; i++) 
+	{
+		c.addRoute( i+ 127);
+		c.addTrain(i, 860);
+		c.addScheduleItemToRoute(i+127, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
+		c.addRouteToTrain(i + 127, i);
+	}
+	c.addRoute(450);
+	c.addTrain(120, 123);
+	c.addScheduleItemToRoute(450, "Novgorodska", Date("2018/11/08/12:20"), Date("2018/11/08/12:45"));
+	c.addRouteToTrain(450,120);
+
+	std::set<std::string> receivedResult = c.getStationsWithNotEnoughtPerons();
 }
 /*****************************************************************************/
 

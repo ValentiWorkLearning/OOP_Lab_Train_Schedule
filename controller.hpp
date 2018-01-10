@@ -10,6 +10,7 @@
 #include <map>
 #include <functional>
 #include <set>
+#include <algorithm>
 
 class Station;
 class Train; 
