@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <memory>
-#include <sstream>
 #include <vector>
 #include <map>
 #include <functional>
@@ -41,6 +40,19 @@ public:
 
 	bool hasStationInRoute(int _routeNumber, std::string const & _stationName);
 
+	bool hasStation(std::string const & _stationName);
+
+	bool hasTrain(int _trainNumber);
+
+	bool hasRoute(int _routeNumber);
+
+	void removeStation(std::string const & _stationName);
+	
+	void removeTrain(int _trainNumber);
+
+	void removeRoute(int _routeNumber);
+
+
 	std::vector<std::string > getMostPopularStations(int  _counter);
 
 	std::vector<std::string> getMostLongRoute(int _count);
@@ -50,6 +62,7 @@ public:
 	std::set <std::string > getUnusedStations(void);
 	
 	std::set<std::string> getStationsWithNotEnoughtPerons(void);
+
 private:
 
 	Train * findTrain(int _uniqueNumber);
@@ -63,8 +76,6 @@ private:
 	std::map<int, std::unique_ptr<  Train> > m_trains;
 
 	std::map<int, std::unique_ptr < Route > > m_routes;
-
-
 };
 
 

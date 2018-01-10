@@ -1,4 +1,4 @@
-// (C) 2013-2016, Sergei Zaychenko, KNURE, Kharkiv, Ukraine
+// (C) 205633-205636, Sergei Zaychenko, KNURE, Kharkiv, Ukraine
 
 /*****************************************************************************/
 
@@ -81,7 +81,6 @@ void createCommonConfiguration(Controller & _c)
 	std::set<std::string> expectedResult = _c.getUnusedStations();
 }
 
-
 void createOverlapConfiguration(Controller &_c) 
 {
 	_c.addStation("Novgorodska", 1);
@@ -114,41 +113,78 @@ void createOverlapConfiguration(Controller &_c)
 
 	_c.addScheduleItemToRoute(127, "Lviv", Date("2018/11/08/22:35"), Date("2018/11/08/22:40"));
 	_c.addScheduleItemToRoute(128, "Lviv", Date("2018/11/08/22:37"), Date("2018/11/08/22:38"));
-	
-	
-	
-
-
 }
 /*****************************************************************************/
+DECLARE_OOP_TEST(test_invalid_parameters) 
+{
+	Controller c;
 
+	//Invalid parameters to create train
+	ASSERT_THROWS(c.addTrain(-1, 1),Messages::InvalidTrainNumber);
+	ASSERT_THROWS(c.addTrain(1, -1), Messages::InvalidPasegersCount);
+	
+	//Invalid parameters to create route
+	ASSERT_THROWS(c.addRoute(-1), Messages::BadRouteNumber);
+	
+	//Invalid parameters to create station
+	ASSERT_THROWS(c.addStation("", 1), Messages::StationNameEmpty);
+	ASSERT_THROWS(c.addStation("Malinovka", 0),Messages::InvalidPeronsCount);
+	ASSERT_THROWS(c.addStation("Malinovka", -1), Messages::InvalidPeronsCount);
 
-DECLARE_OOP_TEST(test_common_configuration)
+	//Invalid parameters to create schedule item
+	c.addRoute(1);
+	c.addStation("Malinovka", 1);
+	ASSERT_THROWS(c.addScheduleItemToRoute(1, "Malinovka", Date("2017/11/08/11:59"), Date("2017/11/08/11:00")), Messages::InvalidTimeSended);
+
+}
+
+DECLARE_OOP_TEST(test_add_and_delete_few_stations) 
+{
+	Controller c;
+	c.addStation("Malinovka",1);
+	c.addStation("Maslyanivka",1);
+	
+	assert(c.hasStation("Malinovka"));
+	assert(c.hasStation("Maslyanivka"));
+
+	c.removeStation("Malinovka");
+	assert(!c.hasStation("Malinovka"));
+}
+
+DECLARE_OOP_TEST(test_add_and_delete_few_trains)
+{
+	Controller c;
+	c.addTrain(232, 563);
+	c.addTrain(724, 563);
+
+	assert(c.hasTrain(232));
+	assert(c.hasTrain(724));
+
+	c.removeTrain(232);
+	assert(!c.hasTrain(232));
+}
+
+DECLARE_OOP_TEST(test_add_and_delete_few_routes)
+{
+	Controller c;
+	c.addRoute(232);
+	c.addRoute(724);
+
+	assert(c.hasRoute(232));
+	assert(c.hasRoute(724));
+
+	c.removeRoute(232);
+	assert(!c.hasRoute(232));
+}
+
+DECLARE_OOP_TEST(test_most_long_route)
 {
 
 	Controller c;
 
 	createCommonConfiguration(c);
-
-	std::vector<std::string> receivedResult  = c.getMostLongRoute(4);
+	std::vector<std::string> receivedResult  = c.getMostLongRoute(5);
 }
-
-DECLARE_OOP_TEST(test_lyamda_simple) 
-{
-	Route r{ 127 };
-	Station s{ "Malinovka",23 };
-	Station s1{ "Kostyanivka",23 };
-	r.addScheduleItem(std::make_unique <TrainScheduleItem>(s, Date("2018/11/08/22:23"), Date("2018/11/08/22:58")));
-	r.addScheduleItem(std::make_unique <TrainScheduleItem>(s1, Date("2018/11/08/23:23"), Date("2018/11/08/23:58")));
-
-	r.forEachScheduleItem(
-		[](TrainScheduleItem const & _trainItem)
-	{
-		std::cout << _trainItem.getStationName() << std::endl;
-	}
-	);
-}
-
 
 DECLARE_OOP_TEST(test_stations_with_not_enough_perons_1)
 {

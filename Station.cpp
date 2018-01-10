@@ -3,7 +3,7 @@
 Station::Station( std::string const & _stationName, int _nPerons):m_Name(_stationName), m_perons(_nPerons)
 {
 	if (_nPerons <= 0)
-		throw std::logic_error(Messages::InvalidPeronsCpunt);
+		throw std::logic_error(Messages::InvalidPeronsCount);
 
 	if (_stationName.empty())
 		throw std::logic_error(Messages::StationNameEmpty);

@@ -5,7 +5,7 @@ namespace Messages
 {
 
 	const char * const StationNameEmpty = "Station name empty ";
-	const char * const InvalidPeronsCpunt = "Invalid  perons  count ";
+	const char * const InvalidPeronsCount = "Invalid  perons  count ";
 	const char * const InvalidTimeSended = "Invalid coming ";
 	const char * const InvalidPasegersCount = "Invalid passagers count";
 	const char * const InvalidTrainNumber = "Invalid train number";

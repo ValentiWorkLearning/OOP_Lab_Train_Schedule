@@ -45,6 +45,36 @@ bool Controller::hasStationInRoute(int _routeNumber, std::string const & _statio
 	return findRoute(_routeNumber)->hasStation(_stationName);;
 }
 
+bool Controller::hasStation(std::string const & _stationName)
+{
+	return (m_stations.find(_stationName) == m_stations.end())?false:true;
+}
+
+bool Controller::hasTrain(int _trainNumber)
+{
+	return (m_trains.find(_trainNumber) == m_trains.end())? false:true;
+}
+
+bool Controller::hasRoute(int _routeNumber)
+{
+	return (m_routes.find(_routeNumber) == m_routes.end())?false:true;
+}
+
+void Controller::removeStation(std::string const & _stationName)
+{
+	m_stations.erase(findStation(_stationName).getStationName());
+}
+
+void Controller::removeTrain(int _trainNumber)
+{
+	m_trains.erase(findTrain(_trainNumber)->getTrainNumber());
+}
+
+void Controller::removeRoute(int _routeNumber)
+{
+	m_routes.erase(findRoute(_routeNumber)->getRouteNumber());
+}
+
 std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 {
 	std::vector<std::string > returnResult;
