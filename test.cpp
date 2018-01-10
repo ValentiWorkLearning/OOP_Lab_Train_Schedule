@@ -26,13 +26,7 @@ void createCommonConfiguration(Controller & _c)
 	_c.addStation("Kremenchug", 7);
 	_c.addStation("Ternopil", 4);
 	_c.addStation("Volchansk", 1);
-
-	//add unused stations
-	_c.addStation("Kirovka", 1);
-	_c.addStation("Golovnevka", 2);
-	_c.addStation("Kirilenska", 4);
-	_c.addStation("Malinovka", 1);
-	//
+	
 	_c.addTrain(1, 860);
 	_c.addTrain(2, 720);
 	_c.addTrain(3, 450);
@@ -73,12 +67,7 @@ void createCommonConfiguration(Controller & _c)
 	_c.addScheduleItemToRoute(726, "Poltava", Date("2018/11/08/18:55"), Date("2018/11/08/19:55"));
 	_c.addScheduleItemToRoute(726, "Kremenchug", Date("2018/11/08/20:00"), Date("2018/11/08/20:15"));
 	_c.addScheduleItemToRoute(726, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
-	_c.addScheduleItemToRoute(726, "Malinovka", Date("2018/11/08/23:23"), Date("2018/11/08/23:58"));
-	std::vector<std::string> expectedValue = _c.getMostPopularStations(5);
-
-	std::vector< std::pair<std::string, std::string> > expectedValue1 = _c.getPairedStations(5);
-
-	std::set<std::string> expectedResult = _c.getUnusedStations();
+	
 }
 
 void createOverlapConfiguration(Controller &_c) 
@@ -181,7 +170,6 @@ DECLARE_OOP_TEST(test_most_long_route)
 {
 
 	Controller c;
-
 	createCommonConfiguration(c);
 	std::vector<std::string> receivedResult  = c.getMostLongRoute(5);
 }
@@ -216,7 +204,51 @@ DECLARE_OOP_TEST(test_stations_with_not_enough_perons_2)
 	c.addScheduleItemToRoute(450, "Novgorodska", Date("2018/11/08/12:20"), Date("2018/11/08/12:45"));
 	c.addRouteToTrain(450,120);
 
-	std::set<std::string> receivedResult = c.getStationsWithNotEnoughtPerons();
+	std::set<std::string> expectedResult = {"Novgorodska"};
+
+	assert(expectedResult == c.getStationsWithNotEnoughtPerons());
+}
+
+DECLARE_OOP_TEST(test_most_popular_station) 
+{
+	Controller c;
+
+	createCommonConfiguration(c);
+
+	std::vector<std::string> expectedValue{ "Kharkiv:4","Kremenchug:4", "Lviv:4","Poltava:3","Kiev:2" };
+
+	assert(expectedValue == c.getMostPopularStations(5));
+}
+
+DECLARE_OOP_TEST(test_paired_stations) 
+{
+	Controller c;
+	createCommonConfiguration(c);
+
+	std::vector< std::pair<std::string, std::string> > expectedValue{ 
+		{"Kharkiv","Kremenchug"},
+		{"Kharkiv","Lviv"},
+		{"Kremenchug","Lviv"},
+		{"Kharkiv","Poltava"},
+		{"Kremenchug","Poltava"} 
+	};
+	
+	assert(expectedValue == c.getPairedStations(5));
+}
+DECLARE_OOP_TEST(test_unused_stations) 
+{
+	Controller c;
+	createCommonConfiguration(c);
+
+	//add unused stations
+	c.addStation("Kirovka", 1);
+	c.addStation("Golovnevka", 2);
+	c.addStation("Kirilenska", 4);
+	c.addStation("Malinovka", 1);
+
+	std::set<std::string> expectedResult = { "Golovnevka","Kirilenska","Kirovka","Malinovka" };
+		
+	assert(expectedResult == c.getUnusedStations());
 }
 /*****************************************************************************/
 
