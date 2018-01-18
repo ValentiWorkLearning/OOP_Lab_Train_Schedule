@@ -14,9 +14,9 @@ public:
 
 	Train & operator = (const Train &) = delete;
 
-	int getTrainNumber();
+	int getTrainNumber() const ;
 	
-	int getPassagersCount();
+	int getPassagersCount() const;
 
 	void setRoute(Route const * _route);
 

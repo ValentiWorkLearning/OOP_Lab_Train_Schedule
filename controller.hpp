@@ -1,8 +1,6 @@
 #ifndef CONTROLLER_HPP
 #define CONTROLLER_HPP
 
-
-#include <map>
 #include <string>
 #include <memory>
 #include <vector>
@@ -28,17 +26,11 @@ public:
 
 	Controller & operator = (Controller &) = delete;
 
-	void addStation( std::string const & _stationName, int _nPerons );
+	Station & addStation( std::string const & _stationName, int _nPerons );
 
-	void addTrain(int _uniqueNumber ,int _nPassagersCount);
+	Train &  addTrain(int _uniqueNumber ,int _nPassagersCount);
 
-	void addRoute(int _uniqueNumber);
-
-	void addScheduleItemToRoute(int _routeNumber, std::string const & _stationName, Date _arriveTime, Date  _departureTime);
-
-	void addRouteToTrain(int _routeNumber, int _trainNumber );
-
-	bool hasStationInRoute(int _routeNumber, std::string const & _stationName);
+	Route &  addRoute(int _uniqueNumber);
 
 	bool hasStation(std::string const & _stationName);
 
@@ -52,28 +44,27 @@ public:
 
 	void removeRoute(int _routeNumber);
 
-
 	std::vector<std::string > getMostPopularStations(int  _counter);
 
 	std::vector<std::string> getMostLongRoute(int _count);
 
 	std::vector<std::pair < std::string, std::string > > getPairedStations(int _count);
 
-	std::set <std::string > getUnusedStations(void);
+	std::set <std::string > getUnusedStations();
 	
-	std::set<std::string> getStationsWithNotEnoughtPerons(void);
+	std::set<std::string> getStationsWithNotEnoughtPerons();
 
 private:
 
-	Train * findTrain(int _uniqueNumber);
+	Train & findTrain(int _uniqueNumber) const ;
 	
-	Route * findRoute(int _uniqueNumber);
+	Route & findRoute(int _uniqueNumber) const ;
 
-	Station & findStation(std::string const & _stationName);
+	Station & findStation(std::string const & _stationName) const ;
 	
 	std::map< std::string, std::unique_ptr < Station > > m_stations;
 
-	std::map<int, std::unique_ptr<  Train> > m_trains;
+	std::map<int, std::unique_ptr< Train > > m_trains;
 
 	std::map<int, std::unique_ptr < Route > > m_routes;
 };

@@ -1,22 +1,19 @@
 #ifndef TRAIN_SCHEDULE_ITEM
 #define TRAIN_SCHEDULE_ITEM
 
+#include "date.hpp"
+#include "Messages.hpp"
+
+
+#include <string>
 
 class Station;
 class Date;
-
-#include "date.hpp"
-#include "Messages.hpp"
-#include <string>
 
 class  TrainScheduleItem
 {
 public:
 	 TrainScheduleItem(Station & _station, Date  _comingTime, Date  _incomingTime);
-
-	 TrainScheduleItem(const TrainScheduleItem&) = delete;
-
-	 TrainScheduleItem & operator = (const TrainScheduleItem &) = delete;
 
 	 std::string const & getStationName()const;
 	 

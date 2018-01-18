@@ -10,6 +10,7 @@ namespace Messages
 	const char * const InvalidPasegersCount = "Invalid passagers count";
 	const char * const InvalidTrainNumber = "Invalid train number";
 	const char * const DuplicateTrain = "Duplicate train inserted";
+	const char * const DuplicateRoute = "Duplicate route";
 	const char * const BadRouteNumber = "Bad route number < 0 ";
 	const char * const TrainDoesNotExist = "Train doesn`t exist";
 	const char * const RouteDoesNotExist = "Route doesn`t exist";
@@ -17,6 +18,7 @@ namespace Messages
 	const char * const StationDoesNotExist = "Station doesn`t exist";
 	const char * const StationAlreadyExistInSchedule = "Station already exist in schedule. Train can`t return to the prrevious station";
 	const char * const IncorrectGetArrivalTimeValue = "Arrival time less than depature time in previos schedule item";
+    const char * const EmptyRoute = "Try to find emty route duration";
 }
 
 #endif

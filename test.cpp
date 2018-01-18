@@ -1,4 +1,3 @@
-// (C) 205633-205636, Sergei Zaychenko, KNURE, Kharkiv, Ukraine
 
 /*****************************************************************************/
 
@@ -18,90 +17,90 @@
 
 void createCommonConfiguration(Controller & _c) 
 {
-	_c.addStation("Novgorodska", 4);
-	_c.addStation("Poltava", 5);
-	_c.addStation("Lviv", 10);
-	_c.addStation("Kiev", 10);
-	_c.addStation("Kharkiv", 10);
-	_c.addStation("Kremenchug", 7);
-	_c.addStation("Ternopil", 4);
-	_c.addStation("Volchansk", 1);
+    Station & s1 = _c.addStation("Novgorodska", 4);
+    Station & s2 = _c.addStation("Poltava", 5);
+    Station & s3 = _c.addStation("Lviv", 10);
+    Station & s4 = _c.addStation("Kiev", 10);
+    Station & s5 = _c.addStation("Kharkiv", 10);
+    Station & s6 = _c.addStation("Kremenchug", 7);
+    Station & s7 = _c.addStation("Ternopil", 4);
+    Station & s8 = _c.addStation("Volchansk", 1);
 	
-	_c.addTrain(1, 860);
-	_c.addTrain(2, 720);
-	_c.addTrain(3, 450);
-	_c.addTrain(4, 450);
+	Train & t1 = _c.addTrain(1, 860);
+    Train & t2 = _c.addTrain(2, 720);
+    Train & t3 = _c.addTrain(3, 450);
+    Train & t4 = _c.addTrain(4, 450);
 
-	_c.addRoute(127);
-	_c.addRoute(128);
-	_c.addRoute(129);
-	_c.addRoute(726);
+	Route & r1 = _c.addRoute(127);
+    Route & r2 = _c.addRoute(128);
+    Route & r3 = _c.addRoute(129);
+    Route & r4 = _c.addRoute(726);
 
-	_c.addRouteToTrain(127, 1);
-	_c.addRouteToTrain(128, 2);
-	_c.addRouteToTrain(129, 3);
-	_c.addRouteToTrain(726, 4);
+    t1.setRoute(&r1);
+    t2.setRoute(&r2);
+    t3.setRoute(&r3);
+    t4.setRoute(&r4);
 
-	_c.addScheduleItemToRoute(127, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
-	_c.addScheduleItemToRoute(127, "Poltava", Date("2018/11/08/12:55"), Date("2018/11/08/13:55"));
-	_c.addScheduleItemToRoute(127, "Lviv", Date("2018/11/08/15:45"), Date("2018/11/08/17:45"));
-	_c.addScheduleItemToRoute(127, "Kiev", Date("2018/11/08/17:55"), Date("2018/11/08/18:00"));
-	_c.addScheduleItemToRoute(127, "Kharkiv", Date("2018/11/08/18:55"), Date("2018/11/08/18:56"));
-	_c.addScheduleItemToRoute(127, "Kremenchug", Date("2018/11/08/19:00"), Date("2018/11/08/19:05"));
-	_c.addScheduleItemToRoute(127, "Ternopil", Date("2018/11/08/20:45"), Date("2018/11/08/20:55"));
-	_c.addScheduleItemToRoute(127, "Volchansk", Date("2018/11/08/22:45"), Date("2018/11/08/23:55"));
+	r1.addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/11:45"), Date("2018/11/08/12:45")));
+	r1.addScheduleItem(TrainScheduleItem(s2, Date("2018/11/08/12:55"), Date("2018/11/08/13:55")));
+	r1.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/15:45"), Date("2018/11/08/17:45")));
+	r1.addScheduleItem(TrainScheduleItem(s4, Date("2018/11/08/17:55"), Date("2018/11/08/18:00")));
+	r1.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/18:55"), Date("2018/11/08/18:56")));
+	r1.addScheduleItem(TrainScheduleItem(s6, Date("2018/11/08/19:00"), Date("2018/11/08/19:05")));
+	r1.addScheduleItem(TrainScheduleItem(s7, Date("2018/11/08/20:45"), Date("2018/11/08/20:55")));
+	r1.addScheduleItem(TrainScheduleItem(s8, Date("2018/11/08/22:45"), Date("2018/11/08/23:55")));
 
-	_c.addScheduleItemToRoute(128, "Kharkiv", Date("2018/11/08/17:55"), Date("2018/11/08/18:00"));
-	_c.addScheduleItemToRoute(128, "Kremenchug", Date("2018/11/08/19:00"), Date("2018/11/08/19:05"));
-	_c.addScheduleItemToRoute(128, "Ternopil", Date("2018/11/08/20:45"), Date("2018/11/08/20:55"));
-	_c.addScheduleItemToRoute(128, "Kiev", Date("2018/11/08/21:55"), Date("2018/11/08/22:30"));
-	_c.addScheduleItemToRoute(128, "Lviv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
-	_c.addScheduleItemToRoute(128, "Volchansk", Date("2018/11/08/22:57"), Date("2018/11/08/23:55"));
+	r2.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/17:55"), Date("2018/11/08/18:00")));
+	r2.addScheduleItem(TrainScheduleItem(s6, Date("2018/11/08/19:00"), Date("2018/11/08/19:05")));
+	r2.addScheduleItem(TrainScheduleItem(s7, Date("2018/11/08/20:45"), Date("2018/11/08/20:55")));
+	r2.addScheduleItem(TrainScheduleItem(s4, Date("2018/11/08/21:55"), Date("2018/11/08/22:30")));
+	r2.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/22:55"), Date("2018/11/08/22:56")));
+	r2.addScheduleItem(TrainScheduleItem(s8, Date("2018/11/08/22:57"), Date("2018/11/08/23:55")));
 
-	_c.addScheduleItemToRoute(129, "Lviv", Date("2018/11/08/15:45"), Date("2018/11/08/17:45"));
-	_c.addScheduleItemToRoute(129, "Poltava", Date("2018/11/08/18:55"), Date("2018/11/08/19:55"));
-	_c.addScheduleItemToRoute(129, "Kremenchug", Date("2018/11/08/20:00"), Date("2018/11/08/20:15"));
-	_c.addScheduleItemToRoute(129, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
+	r3.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/15:45"), Date("2018/11/08/17:45")));
+	r3.addScheduleItem(TrainScheduleItem(s2, Date("2018/11/08/18:55"), Date("2018/11/08/19:55")));
+	r3.addScheduleItem(TrainScheduleItem(s6, Date("2018/11/08/20:00"), Date("2018/11/08/20:15")));
+	r3.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/22:55"), Date("2018/11/08/22:56")));
 
-	_c.addScheduleItemToRoute(726, "Lviv", Date("2018/11/08/15:45"), Date("2018/11/08/17:45"));
-	_c.addScheduleItemToRoute(726, "Poltava", Date("2018/11/08/18:55"), Date("2018/11/08/19:55"));
-	_c.addScheduleItemToRoute(726, "Kremenchug", Date("2018/11/08/20:00"), Date("2018/11/08/20:15"));
-	_c.addScheduleItemToRoute(726, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
+	r4.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/15:45"), Date("2018/11/08/17:45")));
+	r4.addScheduleItem(TrainScheduleItem(s2, Date("2018/11/08/18:55"), Date("2018/11/08/19:55")));
+	r4.addScheduleItem(TrainScheduleItem(s6, Date("2018/11/08/20:00"), Date("2018/11/08/20:15")));
+	r4.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/22:55"), Date("2018/11/08/22:56")));
 	
 }
 
 void createOverlapConfiguration(Controller &_c) 
 {
-	_c.addStation("Novgorodska", 1);
-	_c.addStation("Poltava", 2);
-	_c.addStation("Lviv", 1);
-	_c.addStation("Kiev", 1);
-	_c.addStation("Kharkiv", 1);
+	Station & s1 = _c.addStation("Novgorodska", 1);
+    Station & s2 = _c.addStation("Poltava", 2);
+    Station & s3 = _c.addStation("Lviv", 1);
+    Station & s4 = _c.addStation("Kiev", 1);
+    Station & s5 = _c.addStation("Kharkiv", 1);
 	
-	_c.addRoute(127);
-	_c.addRoute(128);
-	_c.addRoute(129);
-	_c.addRoute(726);
+	Route& r1 = _c.addRoute(127);
+    Route& r2 = _c.addRoute(128);
+    Route& r3 = _c.addRoute(129);
+    Route& r4 = _c.addRoute(726);
 
-	_c.addTrain(1, 860);
-	_c.addTrain(2, 720);
-	_c.addTrain(3, 450);
+	Train & t1 = _c.addTrain(1, 860);
+    Train & t2 = _c.addTrain(2, 720);
+    Train & t3 = _c.addTrain(3, 450);
 
-	_c.addScheduleItemToRoute(127, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
-	_c.addScheduleItemToRoute(128, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
+    r1.addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/11:45"), Date("2018/11/08/12:45")));
+    r2.addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/11:45"), Date("2018/11/08/12:45")));
 
-	_c.addScheduleItemToRoute(127, "Kharkiv", Date("2018/11/08/18:55"), Date("2018/11/08/18:56"));
-	_c.addScheduleItemToRoute(128, "Kharkiv", Date("2018/11/08/17:55"), Date("2018/11/08/18:00"));
-	_c.addScheduleItemToRoute(129, "Kharkiv", Date("2018/11/08/22:55"), Date("2018/11/08/22:56"));
+    r1.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/18:55"), Date("2018/11/08/18:56")));
+    r2.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/17:55"), Date("2018/11/08/18:00")));
+    r3.addScheduleItem(TrainScheduleItem(s5, Date("2018/11/08/22:55"), Date("2018/11/08/22:56")));
 
-	_c.addScheduleItemToRoute(127, "Kiev", Date("2018/11/08/19:55"), Date("2018/11/08/20:00"));
-	_c.addScheduleItemToRoute(128, "Kiev", Date("2018/11/08/21:55"), Date("2018/11/08/22:30"));
-	_c.addScheduleItemToRoute(129, "Kiev", Date("2018/11/08/23:55"), Date("2018/11/09/12:30"));
 
-	_c.addScheduleItemToRoute(127, "Poltava", Date("2018/11/08/21:55"), Date("2018/11/08/22:00"));
+    r1.addScheduleItem(TrainScheduleItem(s4, Date("2018/11/08/19:55"), Date("2018/11/08/20:00")));
+    r2.addScheduleItem(TrainScheduleItem(s4, Date("2018/11/08/21:55"), Date("2018/11/08/22:30")));
+    r3.addScheduleItem(TrainScheduleItem(s4, Date("2018/11/08/23:55"), Date("2018/11/09/12:30")));
 
-	_c.addScheduleItemToRoute(127, "Lviv", Date("2018/11/08/22:35"), Date("2018/11/08/22:40"));
-	_c.addScheduleItemToRoute(128, "Lviv", Date("2018/11/08/22:37"), Date("2018/11/08/22:38"));
+    r1.addScheduleItem(TrainScheduleItem(s2, Date("2018/11/08/21:55"), Date("2018/11/08/22:00")));
+    r1.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/22:35"), Date("2018/11/08/22:40")));
+    r2.addScheduleItem(TrainScheduleItem(s3, Date("2018/11/08/22:37"), Date("2018/11/08/22:38")));
 }
 /*****************************************************************************/
 DECLARE_OOP_TEST(test_invalid_parameters) 
@@ -121,9 +120,9 @@ DECLARE_OOP_TEST(test_invalid_parameters)
 	ASSERT_THROWS(c.addStation("Malinovka", -1), Messages::InvalidPeronsCount);
 
 	//Invalid parameters to create schedule item
-	c.addRoute(1);
-	c.addStation("Malinovka", 1);
-	ASSERT_THROWS(c.addScheduleItemToRoute(1, "Malinovka", Date("2017/11/08/11:59"), Date("2017/11/08/11:00")), Messages::InvalidTimeSended);
+	Route & r1  = c.addRoute(1);
+	Station & s1 = c.addStation("Malinovka", 1);
+	ASSERT_THROWS(r1.addScheduleItem(TrainScheduleItem(s1, Date("2017/11/08/11:59"), Date("2017/11/08/11:00"))), Messages::InvalidTimeSended);
 
 }
 
@@ -166,6 +165,15 @@ DECLARE_OOP_TEST(test_add_and_delete_few_routes)
 	assert(!c.hasRoute(232));
 }
 
+DECLARE_OOP_TEST(test_add_duplicated_routes) 
+{
+	Controller c;
+
+	c.addRoute(128);
+
+    ASSERT_THROWS(c.addRoute(128), Messages::DuplicateRoute);
+}
+
 DECLARE_OOP_TEST(test_most_long_route)
 {
 
@@ -190,20 +198,24 @@ DECLARE_OOP_TEST(test_stations_with_not_enough_perons_2)
 {
 	Controller c;
 
-	c.addStation("Novgorodska", 10);
+	Station & s1 =  c.addStation("Novgorodska", 10);
 
+    std::vector<Route *> routes;
+    std::vector<Train * > trains;
+    
 	for (int i = 0; i < 10; i++) 
 	{
-		c.addRoute( i+ 127);
-		c.addTrain(i, 860);
-		c.addScheduleItemToRoute(i+127, "Novgorodska", Date("2018/11/08/11:45"), Date("2018/11/08/12:45"));
-		c.addRouteToTrain(i + 127, i);
+	    routes.emplace_back(&c.addRoute( i+ 127));
+        trains.emplace_back(&c.addTrain(i, 860));
+        routes[i]->addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/11:45"), Date("2018/11/08/12:45")));
+        trains[i]->setRoute(routes[i]);
 	}
-	c.addRoute(450);
-	c.addTrain(120, 123);
-	c.addScheduleItemToRoute(450, "Novgorodska", Date("2018/11/08/12:20"), Date("2018/11/08/12:45"));
-	c.addRouteToTrain(450,120);
+	Route & r2 = c.addRoute(450);
+	Train & t2 = c.addTrain(120, 123);
 
+    r2.addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/12:20"), Date("2018/11/08/12:45")));
+    t2.setRoute(&r2);
+  
 	std::set<std::string> expectedResult = {"Novgorodska"};
 
 	assert(expectedResult == c.getStationsWithNotEnoughtPerons());
@@ -225,7 +237,8 @@ DECLARE_OOP_TEST(test_paired_stations)
 	Controller c;
 	createCommonConfiguration(c);
 
-	std::vector< std::pair<std::string, std::string> > expectedValue{ 
+	std::vector< std::pair<std::string, std::string> > expectedValue
+    { 
 		{"Kharkiv","Kremenchug"},
 		{"Kharkiv","Lviv"},
 		{"Kremenchug","Lviv"},

@@ -5,44 +5,33 @@
 #include "TrainScheduleItem.hpp"
 #include "route.hpp"
 
-void Controller::addStation(std::string const & _stationName, int _nPerons)
-{
+Station &  Controller::addStation(std::string const & _stationName, int _nPerons)
+{ 
 	m_stations.insert({ _stationName, std::make_unique<Station>(_stationName, _nPerons) });
+
+    return findStation(_stationName);
 }
 
-void Controller::addTrain(int _uniqueNumber,int _nPassagersCount)
+Train & Controller::addTrain(int _uniqueNumber,int _nPassagersCount)
 {
-	if (m_trains.find(_uniqueNumber) == m_trains.end())
+	if (hasTrain(_uniqueNumber))
 	{
-		m_trains.insert({ _uniqueNumber, std::make_unique<Train>(_uniqueNumber, _nPassagersCount) });
+        throw std::logic_error(Messages::DuplicateTrain);
 	}
-	else
+
+    m_trains.insert({ _uniqueNumber, std::make_unique<Train>(_uniqueNumber, _nPassagersCount) });
+    return findTrain(_uniqueNumber);
+}
+
+Route &  Controller::addRoute(int _uniqueNumber)
+{
+	if (hasRoute(_uniqueNumber)) 
 	{
-		throw std::logic_error(Messages::DuplicateTrain);
+        throw std::logic_error(Messages::DuplicateRoute);
 	}
-}
+    m_routes.insert({ _uniqueNumber,  std::make_unique<Route>(_uniqueNumber) });
 
-void Controller::addRoute(int _uniqueNumber)
-{
-	if (m_routes.find(_uniqueNumber) == m_routes.end()) 
-	{
-		m_routes.insert({ _uniqueNumber,  std::make_unique<Route>(_uniqueNumber)  });
-	}
-}
-
-void Controller::addScheduleItemToRoute(int _routeNumber, std::string const & _stationName, Date  _arriveTime, Date _departureTime)
-{
-	findRoute(_routeNumber)->addScheduleItem( std::make_unique<TrainScheduleItem>( findStation(_stationName), _arriveTime, _departureTime) );
-}
-
-void Controller::addRouteToTrain(int _routeNumber, int _trainNumber)
-{
-	findTrain( _trainNumber )->setRoute( findRoute(_routeNumber) );
-}
-
-bool Controller::hasStationInRoute(int _routeNumber, std::string const & _stationName)
-{
-	return findRoute(_routeNumber)->hasStation(_stationName);;
+    return findRoute(_uniqueNumber);
 }
 
 bool Controller::hasStation(std::string const & _stationName)
@@ -67,76 +56,62 @@ void Controller::removeStation(std::string const & _stationName)
 
 void Controller::removeTrain(int _trainNumber)
 {
-	m_trains.erase(findTrain(_trainNumber)->getTrainNumber());
+	m_trains.erase(findTrain(_trainNumber).getTrainNumber());
 }
 
 void Controller::removeRoute(int _routeNumber)
 {
-	m_routes.erase(findRoute(_routeNumber)->getRouteNumber());
+	m_routes.erase(findRoute(_routeNumber).getRouteNumber());
 }
 
 std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 {
-	std::vector<std::string > returnResult;
 
-	std::map<std::string, int> stationCounter;
-	
-	for (auto & x : m_stations) 
-	{
-		stationCounter.insert({ x.second->getStationName(), 0 });
-	}
+    std::vector<std::string> returnResult;
+    std::map< Station const * , int > stationCounter;
+    
+    for (auto & x : m_routes) 
+    {
+        x.second->forEachScheduleItem( [ &stationCounter ](auto & _item) 
+        {
+            stationCounter[ &_item.getStation()] ++;
+        } );
+    }
 
-	for (auto & x : m_routes) 
-	{
-		for (auto & y : m_stations)
-		{
-			if (x.second->hasStation(y.second->getStationName())) 
-			{
-				stationCounter[y.second->getStationName()]++;
-			}
-		}
-	}
+    std::vector< std::pair < Station const *, int> > sortedStations{ stationCounter.begin(), stationCounter.end() };
 
-	std::multimap<int, std::string,std::greater<int>> greaterStation; 
-	
-	for (auto &x : stationCounter) 
-	{
-		greaterStation.emplace(x.second, x.first);
-	}
+    std::sort(sortedStations.begin(), sortedStations.end(), [&](auto _p1, auto _p2) ->bool
+    {
+        if (_p1.second == _p2.second) return _p1.first->getStationName() < _p2.first->getStationName();
+        return _p1.second > _p2.second;
+    }
+    );
 
-	for (auto & x : greaterStation) 
-	{
-		static int i = 0;
-		if (i == _counter) break;
-		returnResult.push_back(x.second + ":" + std::to_string(x.first));
-		i++;
-	}
-	return returnResult;
+    for (auto & x : sortedStations) 
+    {
+    	if (returnResult.size() == _counter) break;
+    	returnResult.push_back(x.first->getStationName() + ":" + std::to_string(x.second));
+    }
+   return returnResult;
 }
 
 std::vector<std::string> Controller::getMostLongRoute(int _count)
-{
-	
-	std::set<std::pair<time_t, int> ,std::greater<std::pair<time_t, int> > > l_routes;
-	
+{	
+    std::multimap < time_t, Route *, std::greater<time_t> > l_routes;
 	std::vector<std::string> l_result;
 
 	for (auto & x : m_routes) 
 	{
-		l_routes.emplace( std::make_pair(x.second->getRouteDuration(), x.second->getRouteNumber() ) );
+        l_routes.insert({ x.second->getRouteDuration() , x.second.get() });
 	}
 
 	for (auto & x : l_routes) 
 	{
-		static int i = 0;
-		
-		if (i == _count) break;
+        if (l_routes.size() == _count) break;
 
-		Route * tempRoute = findRoute(x.second);
-		l_result.push_back("Route number: " + std::to_string(x.second) + " start station: " + tempRoute->getStartStation().getStationName()+
-		" finish station: " + tempRoute->getLastStation().getStationName()+" duration: "+ std::to_string(x.first/3600)+ ':'+std::to_string((x.first % 3600)/60));
-		i++;
-	}
+		l_result.push_back("Route number: " + std::to_string(x.second->getRouteNumber()) + " start station: " + findRoute(x.second->getRouteNumber()).getStartStation().getStationName()+
+		" finish station: " + findRoute(x.second->getRouteNumber()).getLastStation().getStationName()+" duration: "+ std::to_string(x.first/3600)+ ':'+std::to_string((x.first % 3600)/60));
+    }
 	return l_result;
 }
 
@@ -178,13 +153,9 @@ std::vector< std::pair<std::string, std::string> > Controller::getPairedStations
 
 	for (auto & x : l_countToPairedStations) 
 	{
-		static int i = 0;
-
-		if (i == _count) break;
+		if (returnResult.size() == _count) break;
 		
-		returnResult.push_back(x.second);
-		
-		i++;
+		returnResult.push_back(x.second);		
 	}
 	return returnResult;
 }
@@ -218,7 +189,7 @@ std::set<std::string> Controller::getUnusedStations(void)
 	return returnResult;
 }
 
-std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
+std::set<std::string> Controller::getStationsWithNotEnoughtPerons()
 {
 	std::set<std::string> returnValue;
 	
@@ -243,7 +214,7 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 			if (y.second->hasStation(x.second->getStationName()))
 			{
 				y.second->forEachScheduleItem(
-					[&x, &l_stationsEvents](TrainScheduleItem const & _item)
+					[&x, &l_stationsEvents](auto & _item)
 				{
 					if (_item.getStationName() == x.second->getStationName())
 					{
@@ -275,18 +246,17 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons(void)
 }
 
 
-
-Train * Controller::findTrain(int _uniqueNumber)
+Train & Controller::findTrain(int _uniqueNumber)const 
 {
 	auto it = m_trains.find(_uniqueNumber);
 	if (it == m_trains.end()) 
 	{
 		throw std::logic_error(Messages::TrainDoesNotExist);
 	}
-	return it->second.get();
+	return *it->second;
 }
 
-Route * Controller::findRoute(int _uniqueNumber)
+Route & Controller::findRoute(int _uniqueNumber)const 
 {
 
 	auto it = m_routes.find(_uniqueNumber);
@@ -294,10 +264,10 @@ Route * Controller::findRoute(int _uniqueNumber)
 	{
 		throw std::logic_error(Messages::RouteDoesNotExist);
 	}
-	return it->second.get();
+	return *it->second;
 }
 
-Station & Controller::findStation(std::string const & _stationName)
+Station & Controller::findStation(std::string const & _stationName) const 
 {
 	auto it = m_stations.find(_stationName);
 	if (it == m_stations.end())

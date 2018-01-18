@@ -13,14 +13,29 @@ Train::Train(int _nTrainNumber ,int _nPassagers): m_passagersPlaces(_nPassagers)
 		throw std::logic_error(Messages::InvalidPasegersCount);
 }
 
-int Train::getTrainNumber()
+int Train::getTrainNumber() const 
 {
 	return m_trainNumber;
 }
 
-int Train::getPassagersCount()
+int Train::getPassagersCount() const 
 {
 	return m_passagersPlaces;
+}
+
+void Train::setRoute(Route const * _route)
+{
+    if (m_route != nullptr) 
+    {
+        throw std::logic_error(Messages::RouteAlreadySet);
+    }
+	
+    m_route = _route;
+}
+
+void Train::unsetRoute()
+{
+	m_route = nullptr;
 }
 
 Route const * Train::getRoute() const 
@@ -28,16 +43,3 @@ Route const * Train::getRoute() const
 	return m_route;
 }
 
-void Train::setRoute(Route const * _route)
-{
-	if (m_route == nullptr)
-	{
-		m_route = _route;
-	}
-	else throw std::logic_error(Messages::RouteAlreadySet);
-}
-
-void Train::unsetRoute()
-{
-	m_route = nullptr;
-}

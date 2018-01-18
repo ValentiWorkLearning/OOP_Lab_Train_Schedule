@@ -1,9 +1,9 @@
 #ifndef ROUTE_HPP
 #define ROUTE_HPP
 
-#include<vector>
-
 #include "TrainScheduleItem.hpp"
+
+#include <vector>
 #include <memory>
 #include <set>
 #include <string>
@@ -22,33 +22,30 @@ public:
 	
 	Route & operator = (const Route &) = delete;
 
-	void addScheduleItem(std::unique_ptr<TrainScheduleItem>   _pScheduleItem);
+	void addScheduleItem(TrainScheduleItem  _pScheduleItem);
 
-	bool hasStation(std::string const & _stationName);
+	bool hasStation(std::string const & _stationName) const ;
 	
-	int const & getRouteNumber(void) const;
+	int const & getRouteNumber() const;
 
-	Station const & getStartStation(void);
+	Station const & getStartStation() const ;
 	
-	Station const & getLastStation(void);
+	Station const & getLastStation() const ;
 
-	time_t getRouteDuration(void);
+    TrainScheduleItem const & startRoute() const ;
+
+    TrainScheduleItem const & endRoute() const ;
+
+	time_t getRouteDuration();
 	
-	void  forEachScheduleItem(std::function<void(TrainScheduleItem const &)> _action) const 
-	{
-		for (auto const & trainPtr : m_scheduleItems) 
-		{
-			_action( * trainPtr);
-		}
-	}
+	void  forEachScheduleItem(std::function<void(TrainScheduleItem const &)> _action) const;
 
 private:
 
-	int m_uniqueNumber;
-
-	std::vector < std::unique_ptr<TrainScheduleItem> > m_scheduleItems;
-
+    std::vector < TrainScheduleItem > m_scheduleItems;
 	std::set < std::string  > m_stationNames;
+	
+	int m_uniqueNumber;
 };
 
 #endif

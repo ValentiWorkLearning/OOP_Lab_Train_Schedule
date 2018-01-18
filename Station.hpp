@@ -1,18 +1,23 @@
-#ifndef STAION_HPP
-#define STAION_HPP
+#ifndef STATION_HPP
+#define STATION_HPP
+
+
+#include "Messages.hpp"
 
 #include <string>
-#include "Messages.hpp"
+
 class Station
 {
 public:
-	explicit Station (  std::string const  & _stationName, int _nPerons );
 
+	Station (  std::string const  & _stationName, int _nPerons );
+
+	~Station() = default;
+	
 	std::string const  & getStationName()const ;
 
 	int getPerronsCount() const ;
 
-	~Station() = default;
 private:
 
 	std::string m_Name;

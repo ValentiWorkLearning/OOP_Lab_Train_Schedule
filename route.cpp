@@ -8,50 +8,71 @@ Route::Route(int _uniqueNumber) : m_uniqueNumber(_uniqueNumber)
 	}
 }
 
-void Route::addScheduleItem(std::unique_ptr<TrainScheduleItem>_pScheduleItem)
+void Route::addScheduleItem(TrainScheduleItem _pScheduleItem)
 {
-	if (m_stationNames.find(_pScheduleItem->getStationName()) == m_stationNames.end())
-	{
-		if (m_scheduleItems.empty() || (m_scheduleItems.back()->getDepartureTime() <= _pScheduleItem->getArrivalTime()))
-		{
-			m_stationNames.insert(_pScheduleItem->getStationName());
-			m_scheduleItems.push_back(std::move(_pScheduleItem));
-		}
-		else 
-		{
-			throw std::logic_error(Messages::IncorrectGetArrivalTimeValue);
-		}
-	}
-	else 
-	{
-		throw std::logic_error(Messages::StationAlreadyExistInSchedule);
-	}
+    if (hasStation(_pScheduleItem.getStationName())) 
+    {
+        throw std::logic_error(Messages::StationAlreadyExistInSchedule);
+    }
+
+    if (!m_scheduleItems.empty()) 
+    {
+        if (m_scheduleItems.back().getDepartureTime() > _pScheduleItem.getArrivalTime()) 
+        {
+            throw std::logic_error(Messages::IncorrectGetArrivalTimeValue);
+        }
+    }
+
+    m_stationNames.insert(_pScheduleItem.getStationName());
+    m_scheduleItems.emplace_back(_pScheduleItem);
 }
 
-bool Route::hasStation(std::string const & _stationName)
+bool Route::hasStation(std::string const & _stationName) const 
 {
-	return(m_stationNames.find(_stationName) == m_stationNames.end() )? false:true ;
+	return(m_stationNames.find(_stationName) != m_stationNames.end() )? true:false ;
 }
 
-int const & Route::getRouteNumber(void)const
+int const & Route::getRouteNumber()const
 {
 	return m_uniqueNumber;
 }
 
-Station const & Route::getStartStation(void)
+Station const & Route::getStartStation() const 
 {
-	return m_scheduleItems.front().get()->getStation();
+    return startRoute().getStation();
 }
 
-Station const & Route::getLastStation(void)
+Station const & Route::getLastStation() const 
 {
-	return m_scheduleItems.back().get()->getStation();
+    return endRoute().getStation();
 }
 
-time_t Route::getRouteDuration(void)
+TrainScheduleItem const & Route::startRoute() const 
 {
-	time_t returnResult = m_scheduleItems.front()->getArrivalTime().secondsDifference(m_scheduleItems.back()->getDepartureTime());
-	return returnResult;
+    return m_scheduleItems.front();
 }
 
+TrainScheduleItem const & Route::endRoute() const 
+{
+    return m_scheduleItems.back();
+}
+
+
+time_t Route::getRouteDuration()
+{
+    if (m_scheduleItems.empty())
+    {
+        throw std::logic_error(Messages::EmptyRoute);
+    }
+    time_t returnResult = m_scheduleItems.front().getArrivalTime().secondsDifference(m_scheduleItems.back().getDepartureTime());
+    return returnResult;
+}
+
+void Route::forEachScheduleItem(std::function<void(TrainScheduleItem const &)> _action) const 
+{
+	for (auto const & trainPtr : m_scheduleItems)
+	{
+		_action(trainPtr);
+	}
+}
 
