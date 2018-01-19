@@ -22,7 +22,7 @@ public:
 	Date();
 	Date(int _year, int _month, int _day);
 	Date(const char * _yyyyMMDDHHMN, char _sep = '/', char _timeSep = ':');
-
+    Date(const time_t _time);
 	int getYear() const;
 	int getMonth() const;
 	int getDay() const;

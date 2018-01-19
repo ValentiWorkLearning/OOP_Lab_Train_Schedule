@@ -51,6 +51,17 @@ Date::Date(const char * _yyyyMMDDHHMN, char _sep, char _timeSep)
 		throw std::logic_error("Error: date is not valid!");
 }
 
+Date::Date(const time_t _time)
+{
+    struct tm * gTime;
+    gTime = gmtime(&_time);
+    m_year = gTime->tm_year + 1900;
+    m_month = gTime->tm_mon + 1;
+    m_day = gTime->tm_mday;
+    m_mins = gTime->tm_min;
+    m_hour = gTime->tm_hour;
+}
+
 
 /*****************************************************************************/
 

@@ -179,7 +179,21 @@ DECLARE_OOP_TEST(test_most_long_route)
 
 	Controller c;
 	createCommonConfiguration(c);
-	std::vector<std::string> receivedResult  = c.getMostLongRoute(5);
+    Route & r1 = c.findRoute(127);
+    Route & r2 = c.findRoute(128);
+    Route & r3 = c.findRoute(129);
+    Route & r4 = c.findRoute(726);
+    std::vector<Route * > routes{ &r1, &r2,&r3,&r4 };
+
+    std::multimap <Date, Route *, std::greater<Date>> expectedResult;
+    for (auto &x : routes) 
+    {
+        expectedResult.insert({ Date(x->getRouteDuration()),x });
+    }
+
+    std::multimap < Date, Route *, std::greater<Date>> receivedResult = c.getMostLongRoute(5);
+
+    assert(expectedResult == receivedResult);
 }
 
 DECLARE_OOP_TEST(test_stations_with_not_enough_perons_1)
@@ -187,9 +201,9 @@ DECLARE_OOP_TEST(test_stations_with_not_enough_perons_1)
 	Controller c;
 	createOverlapConfiguration(c);
 
-	std::set<std::string> expectedResult{ "Novgorodska" , "Lviv" };
+    std::set<Station const * > expectedResult{ &c.findStation("Novgorodska"),&c.findStation("Lviv") };
 
-	std::set<std::string> receivedResult = c.getStationsWithNotEnoughtPerons();
+	std::set<Station const *> receivedResult = c.getStationsWithNotEnoughtPerons();
 
 	assert(expectedResult == receivedResult);
 }
@@ -216,7 +230,7 @@ DECLARE_OOP_TEST(test_stations_with_not_enough_perons_2)
     r2.addScheduleItem(TrainScheduleItem(s1, Date("2018/11/08/12:20"), Date("2018/11/08/12:45")));
     t2.setRoute(&r2);
   
-	std::set<std::string> expectedResult = {"Novgorodska"};
+	std::set<Station const *> expectedResult = {&s1};
 
 	assert(expectedResult == c.getStationsWithNotEnoughtPerons());
 }
@@ -234,19 +248,25 @@ DECLARE_OOP_TEST(test_most_popular_station)
 
 DECLARE_OOP_TEST(test_paired_stations) 
 {
-	Controller c;
-	createCommonConfiguration(c);
 
-	std::vector< std::pair<std::string, std::string> > expectedValue
-    { 
-		{"Kharkiv","Kremenchug"},
-		{"Kharkiv","Lviv"},
-		{"Kremenchug","Lviv"},
-		{"Kharkiv","Poltava"},
-		{"Kremenchug","Poltava"} 
-	};
+	Controller c;
+
+    createCommonConfiguration(c);
+
+    std::set<std::pair<Station const * , Station const * >> receivedResult = c.getPairedStations(5);
 	
-	assert(expectedValue == c.getPairedStations(5));
+    std::vector< std::pair<Station &, Station &> > expectedValue
+    { 
+		{c.findStation("Kharkiv"),c.findStation("Kremenchug")},
+		{c.findStation("Kharkiv"),c.findStation("Lviv")},
+		{c.findStation("Kremenchug"),c.findStation("Lviv")},
+		{c.findStation("Kharkiv"),c.findStation("Poltava")},
+		{c.findStation("Kremenchug"),c.findStation("Poltava")} 
+	};
+    for (auto & x : expectedValue) 
+    {
+        assert (receivedResult.find({ &x.first , &x.second}) != receivedResult.end());
+    }
 }
 DECLARE_OOP_TEST(test_unused_stations) 
 {
@@ -254,13 +274,12 @@ DECLARE_OOP_TEST(test_unused_stations)
 	createCommonConfiguration(c);
 
 	//add unused stations
-	c.addStation("Kirovka", 1);
-	c.addStation("Golovnevka", 2);
-	c.addStation("Kirilenska", 4);
-	c.addStation("Malinovka", 1);
-
-	std::set<std::string> expectedResult = { "Golovnevka","Kirilenska","Kirovka","Malinovka" };
-		
+	Station & s1 = c.addStation("Kirovka", 1);
+	Station & s2 = c.addStation("Golovnevka", 2);
+    Station & s3 = c.addStation("Kirilenska", 4);
+    Station & s4 = c.addStation("Malinovka", 1);
+	
+    std::set<Station const * > expectedResult { &s1,&s2,&s3,&s4 };
 	assert(expectedResult == c.getUnusedStations());
 }
 /*****************************************************************************/

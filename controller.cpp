@@ -95,75 +95,55 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
    return returnResult;
 }
 
-std::vector<std::string> Controller::getMostLongRoute(int _count)
-{	
-    std::multimap < time_t, Route *, std::greater<time_t> > l_routes;
-	std::vector<std::string> l_result;
-
+std::multimap < Date, Route *, std::greater<Date> >
+Controller::getMostLongRoute(int _count)
+{
+    std::multimap < Date, Route *, std::greater<Date> > l_routes;
 	for (auto & x : m_routes) 
-	{
-        l_routes.insert({ x.second->getRouteDuration() , x.second.get() });
-	}
-
-	for (auto & x : l_routes) 
-	{
+	{   
         if (l_routes.size() == _count) break;
+        l_routes.insert({ Date(x.second->getRouteDuration() ) , x.second.get() });
+	}
 
-		l_result.push_back("Route number: " + std::to_string(x.second->getRouteNumber()) + " start station: " + findRoute(x.second->getRouteNumber()).getStartStation().getStationName()+
-		" finish station: " + findRoute(x.second->getRouteNumber()).getLastStation().getStationName()+" duration: "+ std::to_string(x.first/3600)+ ':'+std::to_string((x.first % 3600)/60));
+	return l_routes;
+}
+
+std::set<std::pair<Station const *, Station const *>>  Controller::getPairedStations(int _count)
+{
+    std::set<std::pair<Station const *, Station const *>> l_returnResult;
+    std::map <std::pair<Station const *, Station const * >, int > l_pairedStations;
+
+    for (auto & x : m_stations) 
+    {
+        if (l_returnResult.size() == _count) break;
+        for (auto & y : m_stations) 
+        {
+            for (auto & z : m_routes) 
+            {
+                std::string s1 = x.second->getStationName();
+                std::string s2 = y.second->getStationName();
+
+                if (z.second->hasStation(s1) && z.second->hasStation(s2) && s1 != s2)
+                {
+                    if (l_pairedStations.find({ y.second.get(), x.second.get() }) == l_pairedStations.end())
+                    {
+                        l_pairedStations[{x.second.get(), y.second.get()}] ++;                      
+                        if (l_pairedStations[{x.second.get(), y.second.get()}] > 2)
+                        {
+                            l_returnResult.insert({ x.second.get(),y.second.get() });
+                        }
+                    }                  
+                }
+            }
+        }
     }
-	return l_result;
+	return l_returnResult;
 }
 
-std::vector< std::pair<std::string, std::string> > Controller::getPairedStations(int _count)
+std::set<Station const *> Controller::getUnusedStations(void)
 {
-	std::vector<std::pair<std::string, std::string>> returnResult;
-	std::map< std::pair<std::string, std::string>, int> l_pairedStations;
-	
-	for (auto & x: m_stations) 
-	{
-		for (auto & y:m_stations) 
-		{
-			if (x.second->getStationName() != y.second->getStationName()&&
-				l_pairedStations.find( std::make_pair( y.second->getStationName() , x.second->getStationName() ) ) == l_pairedStations.end())
-			{
-				l_pairedStations.emplace(std::make_pair(x.second->getStationName(), y.second->getStationName()), 0);
-			}
-		}
-	}
-
-	for (auto & x: l_pairedStations ) 
-	{
-		for (auto & y : m_routes )
-		{
-			if (y.second->hasStation(x.first.first) && y.second->hasStation(x.first.second)) 
-			{
-				l_pairedStations[std::make_pair(x.first.first, x.first.second)] ++;
-			}
-		}
-	}
-	
-	std::multimap<  int, std::pair<std::string, std::string> , std::greater<> > l_countToPairedStations;
-
-	for (auto & x: l_pairedStations) 
-	{
-		if (x.second > 2)
-			l_countToPairedStations.emplace(x.second, x.first);
-	}
-
-	for (auto & x : l_countToPairedStations) 
-	{
-		if (returnResult.size() == _count) break;
-		
-		returnResult.push_back(x.second);		
-	}
-	return returnResult;
-}
-
-std::set<std::string> Controller::getUnusedStations(void)
-{
-	std::set<std::string> returnResult;
-	std::set<std::string> deprecatedStations;
+	std::set<Station const *> returnResult;
+	std::set<Station const *> deprecatedStations;
 
 	for (auto & x : m_stations) 
 	{
@@ -171,11 +151,11 @@ std::set<std::string> Controller::getUnusedStations(void)
 		{
 			if (!y.second->hasStation(x.second->getStationName())) 
 			{
-				returnResult.emplace(x.second->getStationName());
+				returnResult.emplace(x.second.get());
 			}
 			else 
 			{
-				deprecatedStations.insert(x.second->getStationName());
+				deprecatedStations.insert(x.second.get());
 			}
 		}
 	}
@@ -189,9 +169,9 @@ std::set<std::string> Controller::getUnusedStations(void)
 	return returnResult;
 }
 
-std::set<std::string> Controller::getStationsWithNotEnoughtPerons()
+std::set<Station const *> Controller::getStationsWithNotEnoughtPerons()
 {
-	std::set<std::string> returnValue;
+	std::set<Station const *> returnValue;
 	
 	struct StationEvent 
 	{
@@ -205,7 +185,7 @@ std::set<std::string> Controller::getStationsWithNotEnoughtPerons()
 	for (auto & x : m_stations)
 	{
 		std::vector <StationEvent> l_stationsEvents{};
-		std::string l_currentStation{ x.second->getStationName() };
+		Station * l_currentStation = x.second.get();
 
 		int l_platformsAvaliable{x.second->getPerronsCount()};
 	

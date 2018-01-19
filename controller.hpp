@@ -8,6 +8,7 @@
 #include <functional>
 #include <set>
 #include <algorithm>
+#include <chrono>
 
 class Station;
 class Train; 
@@ -46,22 +47,25 @@ public:
 
 	std::vector<std::string > getMostPopularStations(int  _counter);
 
-	std::vector<std::string> getMostLongRoute(int _count);
+    std::multimap < Date , Route * ,std::greater<Date>>
+        getMostLongRoute(int _count);
 
-	std::vector<std::pair < std::string, std::string > > getPairedStations(int _count);
+	std::set<std::pair<Station const *, Station const *>> 
+        getPairedStations(int _count);
 
-	std::set <std::string > getUnusedStations();
+	std::set <Station const * > getUnusedStations();
 	
-	std::set<std::string> getStationsWithNotEnoughtPerons();
+	std::set<Station const *> getStationsWithNotEnoughtPerons();
+
+
+    Train & findTrain(int _uniqueNumber) const;
+
+    Route & findRoute(int _uniqueNumber) const;
+
+    Station & findStation(std::string const & _stationName) const;
 
 private:
 
-	Train & findTrain(int _uniqueNumber) const ;
-	
-	Route & findRoute(int _uniqueNumber) const ;
-
-	Station & findStation(std::string const & _stationName) const ;
-	
 	std::map< std::string, std::unique_ptr < Station > > m_stations;
 
 	std::map<int, std::unique_ptr< Train > > m_trains;
