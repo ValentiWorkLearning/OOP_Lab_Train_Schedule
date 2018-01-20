@@ -6,10 +6,13 @@
 #include "route.hpp"
 
 Station &  Controller::addStation(std::string const & _stationName, int _nPerons)
-{ 
-	m_stations.insert({ _stationName, std::make_unique<Station>(_stationName, _nPerons) });
-
-    return findStation(_stationName);
+{
+    if (hasStation(_stationName)) 
+    {
+        throw std::logic_error(Messages::DuplicateStation);
+    }
+    Station & rS = *m_stations.insert({ _stationName,  std::make_unique<Station>(_stationName,_nPerons) }).first->second.get() ;
+    return rS;
 }
 
 Train & Controller::addTrain(int _uniqueNumber,int _nPassagersCount)
@@ -19,8 +22,8 @@ Train & Controller::addTrain(int _uniqueNumber,int _nPassagersCount)
         throw std::logic_error(Messages::DuplicateTrain);
 	}
 
-    m_trains.insert({ _uniqueNumber, std::make_unique<Train>(_uniqueNumber, _nPassagersCount) });
-    return findTrain(_uniqueNumber);
+    Train & rTr= *m_trains.insert({ _uniqueNumber, std::make_unique<Train>(_uniqueNumber, _nPassagersCount) }).first->second.get();
+    return rTr;
 }
 
 Route &  Controller::addRoute(int _uniqueNumber)
@@ -29,39 +32,38 @@ Route &  Controller::addRoute(int _uniqueNumber)
 	{
         throw std::logic_error(Messages::DuplicateRoute);
 	}
-    m_routes.insert({ _uniqueNumber,  std::make_unique<Route>(_uniqueNumber) });
-
-    return findRoute(_uniqueNumber);
+     Route &  rRt = *m_routes.insert({ _uniqueNumber,  std::make_unique<Route>(_uniqueNumber) }).first->second.get();
+    return rRt;
 }
 
 bool Controller::hasStation(std::string const & _stationName)
 {
-	return (m_stations.find(_stationName) == m_stations.end())?false:true;
+	return (m_stations.find(_stationName) != m_stations.end())?true:false;
 }
 
 bool Controller::hasTrain(int _trainNumber)
 {
-	return (m_trains.find(_trainNumber) == m_trains.end())? false:true;
+	return (m_trains.find(_trainNumber) != m_trains.end())? true:false;
 }
 
 bool Controller::hasRoute(int _routeNumber)
 {
-	return (m_routes.find(_routeNumber) == m_routes.end())?false:true;
+	return (m_routes.find(_routeNumber) != m_routes.end())?true:false;
 }
 
 void Controller::removeStation(std::string const & _stationName)
 {
-	m_stations.erase(findStation(_stationName).getStationName());
+	m_stations.erase(_stationName);
 }
 
 void Controller::removeTrain(int _trainNumber)
 {
-	m_trains.erase(findTrain(_trainNumber).getTrainNumber());
+	m_trains.erase(_trainNumber);
 }
 
 void Controller::removeRoute(int _routeNumber)
 {
-	m_routes.erase(findRoute(_routeNumber).getRouteNumber());
+	m_routes.erase(_routeNumber);
 }
 
 std::vector<std::string> Controller::getMostPopularStations(int  _counter)
@@ -80,7 +82,7 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
 
     std::vector< std::pair < Station const *, int> > sortedStations{ stationCounter.begin(), stationCounter.end() };
 
-    std::sort(sortedStations.begin(), sortedStations.end(), [&](auto _p1, auto _p2) ->bool
+    std::sort(sortedStations.begin(), sortedStations.end(), [&](auto _p1, auto _p2)->bool
     {
         if (_p1.second == _p2.second) return _p1.first->getStationName() < _p2.first->getStationName();
         return _p1.second > _p2.second;
@@ -161,10 +163,7 @@ std::set<Station const *> Controller::getUnusedStations(void)
 	}
 	for (auto & x : deprecatedStations) 
 	{
-		if (returnResult.find(x) != returnResult.end()) 
-		{
-			returnResult.erase(x);
-		}
+		returnResult.erase(x);
 	}
 	return returnResult;
 }

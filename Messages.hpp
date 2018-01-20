@@ -11,6 +11,7 @@ namespace Messages
 	const char * const InvalidTrainNumber = "Invalid train number";
 	const char * const DuplicateTrain = "Duplicate train inserted";
 	const char * const DuplicateRoute = "Duplicate route";
+    const char * const DuplicateStation = "Duplicate station";
 	const char * const BadRouteNumber = "Bad route number < 0 ";
 	const char * const TrainDoesNotExist = "Train doesn`t exist";
 	const char * const RouteDoesNotExist = "Route doesn`t exist";
