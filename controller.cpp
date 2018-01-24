@@ -122,10 +122,8 @@ std::set<std::pair<Station const *, Station const *>>  Controller::getPairedStat
         {
             for (auto & z : m_routes) 
             {
-                std::string s1 = x.second->getStationName();
-                std::string s2 = y.second->getStationName();
-
-                if (z.second->hasStation(s1) && z.second->hasStation(s2) && s1 != s2)
+    
+                if (z.second->hasStation(*x.second) && z.second->hasStation(*y.second) && x.second->getStationName() != y.second->getStationName())
                 {
                     if (l_pairedStations.find({ y.second.get(), x.second.get() }) == l_pairedStations.end())
                     {
@@ -151,7 +149,7 @@ std::set<Station const *> Controller::getUnusedStations(void)
 	{
 		for (auto & y : m_routes) 
 		{
-			if (!y.second->hasStation(x.second->getStationName())) 
+			if (!y.second->hasStation(*x.second)) 
 			{
 				returnResult.emplace(x.second.get());
 			}
@@ -190,7 +188,7 @@ std::set<Station const *> Controller::getStationsWithNotEnoughtPerons()
 	
 		for (auto & y : m_routes)
 		{
-			if (y.second->hasStation(x.second->getStationName()))
+			if (y.second->hasStation(*x.second))
 			{
 				y.second->forEachScheduleItem(
 					[&x, &l_stationsEvents](auto & _item)

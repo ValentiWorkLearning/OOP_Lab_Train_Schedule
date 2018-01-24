@@ -23,14 +23,10 @@ public:
 	Route & operator = (const Route &) = delete;
 
 	void addScheduleItem(TrainScheduleItem  _pScheduleItem);
-
-	bool hasStation(std::string const & _stationName) const ;
 	
+    bool hasStation(Station const & _station)const;
+
 	int const & getRouteNumber() const;
-
-	Station const & getStartStation() const ;
-	
-	Station const & getLastStation() const ;
 
     TrainScheduleItem const & startRoute() const ;
 

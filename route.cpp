@@ -1,4 +1,5 @@
 #include "route.hpp"
+#include "Station.hpp"
 
 Route::Route(int _uniqueNumber) : m_uniqueNumber(_uniqueNumber)
 {
@@ -10,7 +11,7 @@ Route::Route(int _uniqueNumber) : m_uniqueNumber(_uniqueNumber)
 
 void Route::addScheduleItem(TrainScheduleItem _pScheduleItem)
 {
-    if (hasStation(_pScheduleItem.getStationName())) 
+    if (hasStation(_pScheduleItem.getStation() )) 
     {
         throw std::logic_error(Messages::StationAlreadyExistInSchedule);
     }
@@ -27,24 +28,13 @@ void Route::addScheduleItem(TrainScheduleItem _pScheduleItem)
     m_scheduleItems.emplace_back(_pScheduleItem);
 }
 
-bool Route::hasStation(std::string const & _stationName) const 
+bool Route::hasStation(Station const & _station)const 
 {
-	return(m_stationNames.find(_stationName) != m_stationNames.end() )? true:false ;
+    return(m_stationNames.find(_station.getStationName()) != m_stationNames.end()) ? true : false;
 }
-
 int const & Route::getRouteNumber()const
 {
 	return m_uniqueNumber;
-}
-
-Station const & Route::getStartStation() const 
-{
-    return startRoute().getStation();
-}
-
-Station const & Route::getLastStation() const 
-{
-    return endRoute().getStation();
 }
 
 TrainScheduleItem const & Route::startRoute() const 
