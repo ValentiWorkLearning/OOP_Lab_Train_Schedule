@@ -39,7 +39,7 @@ public:
 private:
 
     std::vector < TrainScheduleItem > m_scheduleItems;
-	std::set < std::string  > m_stationNames;
+	std::set < Station const * > m_stationNames;
 	
 	int m_uniqueNumber;
 };

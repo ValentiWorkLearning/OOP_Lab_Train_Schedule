@@ -45,7 +45,7 @@ public:
 
 	void removeRoute(int _routeNumber);
 
-	std::vector<std::string > getMostPopularStations(int  _counter);
+    std::vector<std::pair<Station const *, int >> getMostPopularStations(int  _counter);
 
     std::multimap < Date , Route * ,std::greater<Date>>
         getMostLongRoute(int _count);

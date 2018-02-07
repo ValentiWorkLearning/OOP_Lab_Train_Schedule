@@ -241,9 +241,15 @@ DECLARE_OOP_TEST(test_most_popular_station)
 
 	createCommonConfiguration(c);
 
-	std::vector<std::string> expectedValue{ "Kharkiv:4","Kremenchug:4", "Lviv:4","Poltava:3","Kiev:2" };
+    Station & s1 = c.findStation("Kharkiv");
+    Station & s2 = c.findStation("Kremenchug");
+    Station & s3 = c.findStation("Lviv");
+    Station & s4 = c.findStation("Poltava");
+    Station & s5 = c.findStation("Kiev"); 
 
-	assert(expectedValue == c.getMostPopularStations(5));
+    std::vector< std::pair< Station const *, int > >expectedResult{ {&s1,4} ,{&s2,4} , {&s3,4} , {&s4,3} , {&s5,2} };
+	
+	assert(expectedResult == c.getMostPopularStations(5));
 }
 
 DECLARE_OOP_TEST(test_paired_stations) 

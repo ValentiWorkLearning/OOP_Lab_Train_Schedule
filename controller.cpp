@@ -38,17 +38,17 @@ Route &  Controller::addRoute(int _uniqueNumber)
 
 bool Controller::hasStation(std::string const & _stationName)
 {
-	return (m_stations.find(_stationName) != m_stations.end())?true:false;
+	return m_stations.find(_stationName) != m_stations.end();
 }
 
 bool Controller::hasTrain(int _trainNumber)
 {
-	return (m_trains.find(_trainNumber) != m_trains.end())? true:false;
+	return m_trains.find(_trainNumber) != m_trains.end();
 }
 
 bool Controller::hasRoute(int _routeNumber)
 {
-	return (m_routes.find(_routeNumber) != m_routes.end())?true:false;
+	return m_routes.find(_routeNumber) != m_routes.end();
 }
 
 void Controller::removeStation(std::string const & _stationName)
@@ -66,10 +66,12 @@ void Controller::removeRoute(int _routeNumber)
 	m_routes.erase(_routeNumber);
 }
 
-std::vector<std::string> Controller::getMostPopularStations(int  _counter)
+
+std::vector<std::pair<Station const *, int >> 
+Controller::getMostPopularStations(int  _counter)
 {
 
-    std::vector<std::string> returnResult;
+    std::vector<std::pair<Station const *, int >> returnResult;
     std::map< Station const * , int > stationCounter;
     
     for (auto & x : m_routes) 
@@ -92,7 +94,7 @@ std::vector<std::string> Controller::getMostPopularStations(int  _counter)
     for (auto & x : sortedStations) 
     {
     	if (returnResult.size() == _counter) break;
-    	returnResult.push_back(x.first->getStationName() + ":" + std::to_string(x.second));
+        returnResult.push_back({ x.first,x.second });
     }
    return returnResult;
 }

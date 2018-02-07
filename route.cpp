@@ -24,13 +24,13 @@ void Route::addScheduleItem(TrainScheduleItem _pScheduleItem)
         }
     }
 
-    m_stationNames.insert(_pScheduleItem.getStationName());
+    m_stationNames.insert(&_pScheduleItem.getStation());
     m_scheduleItems.emplace_back(_pScheduleItem);
 }
 
 bool Route::hasStation(Station const & _station)const 
 {
-    return(m_stationNames.find(_station.getStationName()) != m_stationNames.end()) ? true : false;
+    return m_stationNames.find(&_station) != m_stationNames.end();
 }
 int const & Route::getRouteNumber()const
 {
